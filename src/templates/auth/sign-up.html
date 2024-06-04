@@ -1,0 +1,41 @@
+<div class="d-flex align-items-center justify-content-center vh-100 bg-body-white" >
+  <div class="form-signin m-auto">
+    <div class="mb-5 text-center ">
+      <img src="img/Logo.png" alt="logo">
+    </div>
+    <h1 class="mb-4 text-center">Создайте аккаунт</h1>
+<!--    <div id="common-error" class="error invalid-feedback mb-2">Неверный пароль или email</div>-->
+    <form>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="bi bi-person"></i></span>
+        </div>
+        <input type="text" class="form-control" placeholder="ФИО" id="user-name">
+        <span id="user-name-error" class="error invalid-feedback">Пожалуйста, введите ФИО</span><br>
+      </div>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="bi bi-envelope-open"></i></span>
+        </div>
+        <input type="email" class="form-control" placeholder="Электронная почта" id="email">
+        <span id="email-error" class="error invalid-feedback">Пожалуйста, введите электронную почту</span>
+      </div>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="bi bi-lock"></i></span>
+        </div>
+        <input type="password" class="form-control" placeholder="Пароль" id="password">
+        <span id="password-error" class="error invalid-feedback">Пожалуйста, введите пароль</span>
+      </div>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="bi bi-lock"></i></span>
+        </div>
+        <input type="password" class="form-control" placeholder="Подтверждение пароля" id="password-repeat">
+        <span id="password-repeat-error" class="error invalid-feedback">Пожалуйста, повторите пароль</span>
+      </div>
+      <button type="button" class="btn btn-primary btn-block w-100 mb-2" id="process-button">Войти</button>
+    </form>
+      <p >Уже есть аккаунт? <a href="/login" class="ms-2">Войдите в систему</a></p>
+  </div>
+</div>
