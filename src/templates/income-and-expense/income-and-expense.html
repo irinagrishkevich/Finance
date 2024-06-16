@@ -1,0 +1,69 @@
+<section class="content">
+    <div class="container-fluid py-5 min-vh-100">
+        <h1 class="mb-4 mt-5">Доходы и расходы</h1>
+        <a href="create-income-table" class="btn btn-success me-1">Создать доход</a>
+        <a href="create-expense-table" class="btn btn-danger me-1">Создать расход</a>
+        <div class="d-flex align-items-center gap-3 my-4">
+            <button type="button" class="btn btn-outline-secondary active">Сегодня</button>
+            <button type="button" class="btn btn-outline-secondary">Неделя</button>
+            <button type="button" class="btn btn-outline-secondary">Месяц</button>
+            <button type="button" class="btn btn-outline-secondary">Год</button>
+            <button type="button" class="btn btn-outline-secondary">Все</button>
+            <button type="button" class="btn btn-outline-secondary">Интервал</button>
+            <div class="text-black">
+                с <a class="text-black" href="#">Дата</a> по <a class="text-black" href="#">Дата</a>
+            </div>
+
+        </div>
+        <div class="pt-5">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">№ операции</th>
+                    <th scope="col">Тип</th>
+                    <th scope="col">Категория</th>
+                    <th scope="col">Сумма</th>
+                    <th scope="col">Дата</th>
+                    <th scope="col">Комментарий</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td class="text-success">доход</td>
+                    <td>зарплата</td>
+                    <td>500$</td>
+                    <td>11.09.2022</td>
+                    <td></td>
+                    <td><a type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash me-1 "></i></a><a href="edit-income-table"><i class="bi bi-pencil text-black"></i></a></td>
+                </tr><tr>
+                    <th scope="row">2</th>
+                    <td class="text-danger">расход</td>
+                    <td>жильё</td>
+                    <td>2 500$</td>
+                    <td>12.09.2022</td>
+                    <td></td>
+                    <td><a type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash me-1 "></i></a><a href="edit-expense-table"><i class="bi bi-pencil text-black"></i></a></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="modalTable"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="d-flex flex-column justify-content-center p-4">
+                            <h5 class="modal-title" id="exampleModalLabel">Вы действительно хотите удалить операцию?</h5>
+                            <div class="d-flex gap-2 justify-content-center align-items-center m-3">
+                                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Да, удалить
+                                </button>
+                                <button type="button" class="btn btn-danger">Не удалять</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

@@ -1,7 +1,7 @@
 import {Login} from "./components/auth/login";
 import {Main} from "./components/main";
 import {SignUp} from "./components/auth/sign-up";
-import {Income} from "./components/income";
+import {Income} from "./components/income/income";
 import {FileUtils} from "./utils/file-utils";
 
 export class Router {
@@ -107,7 +107,47 @@ export class Router {
             {
                 route: '/income-and-expense',
                 title: 'Доходы и расходы',
-                template: 'templates/income-and-expense.html',
+                template: 'templates/income-and-expense/income-and-expense.html',
+                styles: 'style/style.css',
+                useLayout: '/templates/layout.html',
+                load: () => {
+
+                }
+            },
+            {
+                route: '/create-income-table',
+                title: 'Создание дохода',
+                template: 'templates/income-and-expense/create-income-table.html',
+                styles: 'style/style.css',
+                useLayout: '/templates/layout.html',
+                load: () => {
+
+                }
+            },
+            {
+                route: '/edit-income-table',
+                title: 'Редактирование дохода',
+                template: 'templates/income-and-expense/edit-income-table.html',
+                styles: 'style/style.css',
+                useLayout: '/templates/layout.html',
+                load: () => {
+
+                }
+            },
+            {
+                route: '/create-expense-table',
+                title: 'Создание расхода',
+                template: 'templates/income-and-expense/create-expense-table.html',
+                styles: 'style/style.css',
+                useLayout: '/templates/layout.html',
+                load: () => {
+
+                }
+            },
+            {
+                route: '/edit-expense-table',
+                title: 'Редактирование расхода',
+                template: 'templates/income-and-expense/edit-expense-table.html',
                 styles: 'style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
