@@ -47,7 +47,7 @@ export class Router {
             {
                 route: '/income',
                 title: 'Доходы',
-                template: 'templates/income.html',
+                template: 'templates/income/income.html',
                 styles: 'style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
@@ -56,8 +56,18 @@ export class Router {
             },
             {
                 route: '/create-income',
-                title: 'Категории доходов',
-                template: 'templates/create-income.html',
+                title: 'Создание доходов',
+                template: 'templates/income/create-income.html',
+                styles: 'style/style.css',
+                useLayout: '/templates/layout.html',
+                load: () => {
+
+                }
+            },
+            {
+                route: '/edit-income',
+                title: 'Редактирование доходов',
+                template: 'templates/income/edit-income.html',
                 styles: 'style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
@@ -67,7 +77,37 @@ export class Router {
             {
                 route: '/expense',
                 title: 'Расходы',
-                template: 'templates/expense.html',
+                template: 'templates/expense/expense.html',
+                styles: 'style/style.css',
+                useLayout: '/templates/layout.html',
+                load: () => {
+
+                }
+            },
+            {
+                route: '/create-expense',
+                title: 'Создание расходов',
+                template: 'templates/expense/create-expense.html',
+                styles: 'style/style.css',
+                useLayout: '/templates/layout.html',
+                load: () => {
+
+                }
+            },
+            {
+                route: '/edit-expense',
+                title: 'Редактирование расходов',
+                template: 'templates/expense/edit-expense.html',
+                styles: 'style/style.css',
+                useLayout: '/templates/layout.html',
+                load: () => {
+
+                }
+            },
+            {
+                route: '/income-and-expense',
+                title: 'Доходы и расходы',
+                template: 'templates/income-and-expense.html',
                 styles: 'style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
