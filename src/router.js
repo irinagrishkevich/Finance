@@ -33,7 +33,7 @@ export class Router {
                 styles: 'style/style.css',
                 useLayout: false,
                 load: () => {
-                    new Login()
+                    new Login(this.openNewRoute.bind(this))
                 }
             },
             {
@@ -43,7 +43,7 @@ export class Router {
                 styles: 'style/style.css',
                 useLayout: false,
                 load: () => {
-                    new SignUp()
+                    new SignUp(this.openNewRoute.bind(this))
                 }
             },
             {
