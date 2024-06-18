@@ -3,6 +3,7 @@ import {Main} from "./components/main";
 import {SignUp} from "./components/auth/sign-up";
 import {Income} from "./components/income/income";
 import {FileUtils} from "./utils/file-utils";
+import {Layout} from "./components/layout";
 
 export class Router {
     constructor() {
@@ -21,6 +22,7 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: () => {
                     new Main()
+
                 },
                 scripts: ['chart.umd.js']
             },
@@ -161,13 +163,17 @@ export class Router {
         window.addEventListener('DOMContentLoaded', this.activateRoute.bind(this))
         window.addEventListener('popstate', this.activateRoute.bind(this))
         document.addEventListener('click', this.clickHandler.bind(this));
+
     }
+
 
     async openNewRoute(url) {
         const currentRoute = window.location.pathname
         history.pushState({}, '', url)
         await this.activateRoute(null, currentRoute)
+
     }
+
     async clickHandler(e) {
         let element = null
         if (e.target.nodeName === 'A') {
@@ -221,6 +227,10 @@ export class Router {
                     document.body.classList.add('layout-fixed')
 
                     this.activateMenuItem(newRoute)
+
+                    new Layout()
+
+
                 } else {
                     document.body.classList.remove('layout-fixed')
                 }

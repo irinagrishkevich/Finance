@@ -1,21 +1,28 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
-        <div class="col-auto col-md-3 col-xl-2 px-0 border">
-            <div class="d-flex flex-column align-items-center justify-content-between align-items-sm-start pt-2 vh-100">
-                <a href="/" class="d-flex align-items-center text-center mt-5 mb-3 px-3">
-                    <img src="img/Logo.png" alt="logo">
+        <div class="col-auto col-md-3 px-0  d-flex menu-tab">
+            <div class="d-flex flex-column justify-content-between align-items-md-start align-items-center p-0 pt-md-2 vh-md-100 border " id="burger">
+                <a href="/" class="d-none d-md-flex align-items-center text-center mt-5 mb-3 px-3">
+                    <img src="img/Logo.png" class="img" alt="logo">
                 </a>
-                <hr class="w-100">
-                <ul class="nav nav-pills flex-column mb-auto px-3 mb-0 mt-5 align-items-center align-items-sm-start "
-                    id="menu">
+
+                <div class="d-flex d-md-none position-absolute align-items-center burger-menu px-3 w-100 justify-content-between">
+                    <a href="/" class="d-flex align-items-center m-0  img-link">
+                        <img src="img/Logo.png" class="img d-block " alt="logo">
+                    </a>
+                    <div class="cursor-pointer" id="burgerTab"><i class="d-inline bi bi-list" ></i></div>
+                </div>
+                <hr class="d-none d-md-block w-100">
+                <ul class="d-none d-md-flex nav nav-pills flex-column mb-auto px-3 mb-0 mt-md-5 align-items-start "
+                    id="burgerMenu">
                     <li class="nav-item text-black">
                         <a href="/" class="nav-link px-0 text-black">
-                            <i class="bi bi-house me-1"></i> <span class="d-none d-sm-inline">Главная</span>
+                            <i class="d-none d-sm-inline bi bi-house me-1"></i> <span class="d-inline">Главная</span>
                         </a>
                     </li>
                     <li class="nav-item ">
                         <a href="/income-and-expense" class="nav-link px-0 text-black">
-                            <i class="bi bi-cash-coin me-1"></i><span class="d-none d-sm-inline">Доходы & расходы</span>
+                            <i class="d-none d-sm-inline bi bi-cash-coin me-1"></i><span class="d-inline">Доходы & расходы</span>
                         </a>
                     </li>
                     <li class="nav-item d-flex flex-column justify-content-between w-100 border border-primary bg-primary rounded">
@@ -28,20 +35,20 @@
                         <ul class="collapse nav flex-column text-white" id="submenu1" data-bs-parent="#menu">
                             <li class="nav-item w-100">
                                 <a href="/income" class="nav-link px-0 border-0 rounded-bottom-0 active"><span
-                                        class="ms-1 d-none d-sm-inline">Доходы</span></a>
+                                        class="ms-1 d-inline">Доходы</span></a>
                             </li>
                             <li class="nav-item w-100">
                                 <a href="/expense" class="nav-link px-0 bg-white rounded-top-0"><span
-                                        class="ms-1 d-none d-sm-inline">Расходы</span></a>
+                                        class="ms-1 d-inline">Расходы</span></a>
                             </li>
                         </ul>
                     </li>
                 </ul>
-                <div class="nav-item nav-link text-black px-3">Баланс: <span class="text-primary"
+                <div class="d-none d-md-flex nav-item nav-link text-black px-3">Баланс: <span class="text-primary"
                                                                              id="balance">1000 $</span>
                 </div>
-                <hr class="w-100">
-                <div class="nav-item nav-link d-flex align-items-center px-3">
+                <hr class="d-none d-md-block w-100">
+                <div class="d-none d-md-flex nav-item nav-link d-flex align-items-center px-3">
 
                     <div class="image rounded-circle bg-light flex-column p-2 me-2">
                         <i class="bi bi-person"></i>
@@ -53,8 +60,9 @@
 
 
             </div>
+            <!-- Sidenav -->
         </div>
-        <div class="col-md-9 py-3 " id="content-layout">
+        <div class="row col-md-9 py-3 " id="content-layout">
 
         </div>
     </div>
