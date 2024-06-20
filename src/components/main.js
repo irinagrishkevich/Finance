@@ -2,7 +2,6 @@ export class Main {
     constructor() {
         this.incomeChartElement = document.getElementById('incomeChart')
         this.expenseChartElement = document.getElementById('expenseChart')
-        console.log('main')
         this.myChart()
     }
 
@@ -62,6 +61,8 @@ export class Main {
 
 
     }
+
+
 }
 
 

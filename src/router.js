@@ -4,6 +4,11 @@ import {SignUp} from "./components/auth/sign-up";
 import {Income} from "./components/income/income";
 import {FileUtils} from "./utils/file-utils";
 import {Layout} from "./components/layout";
+import {PasswordEye} from "./utils/password-eye";
+import {Logout} from "./components/auth/logout";
+import {AuthUtils} from "./utils/auth-utils";
+import {HttpUtils} from "./utils/http-utils";
+
 
 export class Router {
     constructor() {
@@ -34,6 +39,7 @@ export class Router {
                 useLayout: false,
                 load: () => {
                     new Login(this.openNewRoute.bind(this))
+                    new PasswordEye()
                 }
             },
             {
@@ -44,6 +50,12 @@ export class Router {
                 useLayout: false,
                 load: () => {
                     new SignUp(this.openNewRoute.bind(this))
+                }
+            },
+            {
+                route: '/logout',
+                load: () => {
+                    new Logout(this.openNewRoute.bind(this))
                 }
             },
             {
@@ -107,9 +119,9 @@ export class Router {
                 }
             },
             {
-                route: '/income-and-expense',
+                route: '/balancing',
                 title: 'Доходы и расходы',
-                template: 'templates/income-and-expense/income-and-expense.html',
+                template: 'templates/income-and-expense/balancing.html',
                 styles: 'style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
@@ -203,12 +215,10 @@ export class Router {
                     document.querySelector(`script[src='/js/${script}']`).remove()
                 })
             }
-            if (currentRoute.unload && typeof currentRoute.unload === 'function') {
-                currentRoute.unload()
-            }
         }
         const urlRoute = window.location.pathname
         const newRoute = this.routes.find(item => item.route === urlRoute)
+
         if (newRoute){
             if (newRoute.scripts && newRoute.scripts.length > 0) {
                 for (const script of newRoute.scripts) {
@@ -223,16 +233,23 @@ export class Router {
                 if (newRoute.useLayout) {
                     this.contentPageElement.innerHTML = await fetch(newRoute.useLayout).then(response => response.text())
                     contentBlock = document.getElementById('content-layout')
+                    new Layout(this.openNewRoute.bind(this))
+                    this.profileNameElement = document.getElementById('profileName')
+                    if (!this.userName) {
+                        let userInfo = AuthUtils.getAuthInfo(AuthUtils.userInfoKey)
 
-                    document.body.classList.add('layout-fixed')
+                        if (userInfo) {
+                            userInfo = JSON.parse(userInfo)
+                            if (userInfo && userInfo.name) {
+                                this.userName = userInfo.name + ' ' + userInfo.lastName
+                            }
+                        } else {
+                            console.log('no user info')
 
+                        }
+                    }
+                    this.profileNameElement.innerText = this.userName
                     this.activateMenuItem(newRoute)
-
-                    new Layout()
-
-
-                } else {
-                    document.body.classList.remove('layout-fixed')
                 }
                 contentBlock.innerHTML = await fetch(newRoute.template).then(response => response.text())
             }
@@ -242,18 +259,42 @@ export class Router {
             }
         }else{
             console.log('404')
-            await this.activateRoute()
+            alert('404')
+            return
         }
     }
     activateMenuItem(route) {
-        document.querySelectorAll('.sidebar .nav-link').forEach(item => {
-            const href = item.getAttribute('href')
-            if ((route.route.includes(href) && href !== '/') || route.route === '/' && href === '/') {
-                item.classList.add('active')
+        document.querySelectorAll('.nav-link').forEach(item => {
+            const href = item.getAttribute('href');
+            if ((route.route.includes(href) && href !== '/') || (route.route === '/' && href === '/')) {
+                item.classList.add('active', 'text-white');
             } else {
-                item.classList.remove('active')
+                item.classList.remove('active', 'text-white');
             }
+        });
+
+        const categoryLink = document.querySelector('a[href="#submenu1"]');
+        const submenu = document.getElementById('submenu1');
+        categoryLink.addEventListener('click', () =>{
+            categoryLink.classList.toggle('active')
+            categoryLink.classList.toggle('text-white');
 
         })
+        if (route.route.includes('/income') || route.route.includes('/expense')) {
+            submenu.classList.add('show')
+            categoryLink.classList.add('active','text-white')
+            document.querySelectorAll('#submenu1 .nav-link').forEach(subItem => {
+                const subHref = subItem.getAttribute('href');
+                if (route.route.includes(subHref)) {
+                    subItem.classList.add('active', 'text-white');
+                } else {
+                    subItem.classList.remove('active', 'text-white');
+                }
+            });
+        } else {
+            categoryLink.classList.remove('active', 'text-white');
+            submenu.classList.remove('show');
+        }
     }
+
 }

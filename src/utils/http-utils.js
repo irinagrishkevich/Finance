@@ -1,11 +1,14 @@
-import {Auth} from "../components/services/auth";
+
+import {AuthUtils} from "./auth-utils";
 import config from "../config/config";
+
 
 export class HttpUtils{
     static async request(url, method = 'GET', useAuth = true, body = null) {
         const result = {
             error: false,
-            response: null
+            response: null,
+            redirect: null
         }
 
 
@@ -19,14 +22,16 @@ export class HttpUtils{
         }
         let token = null
         if (useAuth){
-            token = Auth.getAuthInfo(Auth.accessTokenKey)
+            token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)
+
             if (token){
-                params.headers['authorization'] = token
+                params.headers['x-auth-token'] = token
             }
         }
         if (body){
             params.body = JSON.stringify(body)
         }
+
         let response = null
         try {
             response = await fetch(config.host + url, params)
@@ -39,13 +44,12 @@ export class HttpUtils{
         if (response.status < 200 || response.status >= 300) {
             result.error = true
             if (useAuth && response.status === 401){
-
                 if (!token){
                     // 1 токена нет
                     result.redirect = '/login'
                 } else {
                     // 2 токена устарел/невалидный (надо обновить)
-                    const updatedTokenResult = await Auth.updateRefreshToken()
+                    const updatedTokenResult = await AuthUtils.updateRefreshToken()
 
                     if (updatedTokenResult){
                         // запрос повторно

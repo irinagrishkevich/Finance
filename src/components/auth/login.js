@@ -1,11 +1,13 @@
-import {Auth} from "../services/auth";
+
 import {HttpUtils} from "../../utils/http-utils";
+import {PasswordEye} from "../../utils/password-eye";
+import {AuthUtils} from "../../utils/auth-utils";
 
 export class Login {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
 
-        if (Auth.getAuthInfo(Auth.accessTokenKey)) {
+        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
             return this.openNewRoute('/')
         }
 
@@ -13,6 +15,9 @@ export class Login {
         this.passwordElement = document.getElementById('password')
         this.rememberMeElement = document.getElementById('remember-me')
         this.commonErrorElement = document.getElementById('common-error')
+
+        PasswordEye.passwordEye()
+
         document.getElementById('process-button').addEventListener('click', this.login.bind(this))
     }
 
@@ -42,15 +47,12 @@ export class Login {
                 password: this.passwordElement.value,
                 rememberMe: this.rememberMeElement.checked
             })
-            console.log(result.error)
-            console.log(result.response)
-            console.log(!result.response.accessToken)
-            console.log(!result.response.refreshToken)
+
             if (result.error || !result.response || (result.response && (!result.response.tokens.accessToken || !result.response.tokens.refreshToken))) {
                 this.commonErrorElement.style.display = 'block'
                 return
             }
-            Auth.setAuthInfo(result.response.tokens.accessToken, result.response.tokens.refreshToken, {id: result.response.user.id, name: result.response.user.name, lastName: result.response.user.lastName})
+            AuthUtils.setAuthInfo(result.response.tokens.accessToken, result.response.tokens.refreshToken, {id: result.response.user.id, name: result.response.user.name, lastName: result.response.user.lastName})
 
             this.openNewRoute('/')
 
