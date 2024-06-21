@@ -55,9 +55,8 @@ export class Layout {
             if (isOpen) {
                 this.closeUserMenu()
             } else {
-                this.userMenuElement.classList.add('d-flex')
+                this.userMenuElement.classList.add('d-block')
                 this.userMenuElement.classList.remove('d-none')
-                document.body.classList.add('shadow-lg')
 
                 document.addEventListener('click', this.outsideClick);
                 this.logoutButtonElement.addEventListener('click', () => {
@@ -67,9 +66,8 @@ export class Layout {
         }
     }
     closeUserMenu() {
-        this.userMenuElement.classList.remove('d-flex')
+        this.userMenuElement.classList.remove('d-block')
         this.userMenuElement.classList.add('d-none')
-        document.body.classList.remove('shadow-lg')
         document.removeEventListener('click', this.outsideClick);
     }
 

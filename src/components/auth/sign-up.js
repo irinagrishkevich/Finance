@@ -73,7 +73,17 @@ export class SignUp {
             if (result.error || !result.response || (result.response && (!result.response.user.id || !result.response.user.email || !result.response.user.name || !result.response.user.lastName))) {
                 return
             }
-            this.openNewRoute('/login')
+
+            if (result.response){
+                const req = await HttpUtils.request('/login', 'POST', false,{
+                    email: this.emailElement.value,
+                    password: this.passwordElement.value,
+                    rememberMe: true
+                })
+                AuthUtils.setAuthInfo(req.response.tokens.accessToken, req.response.tokens.refreshToken, {id: req.response.user.id, name: result.response.user.name, lastName: req.response.user.lastName})
+
+            }
+            this.openNewRoute('/')
         }
     }
 }
