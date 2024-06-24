@@ -14,6 +14,8 @@ import {Expense} from "./components/expense/expense";
 import {ExpenseCreate} from "./components/expense/create";
 import {ExpenseEdit} from "./components/expense/edit";
 import {DeleteExpense} from "./components/expense/delete";
+import {Balancing} from "./components/balancing/balancing";
+import {CreateIncomeBalancing} from "./components/balancing/create-income";
 
 
 export class Router {
@@ -139,27 +141,27 @@ export class Router {
             {
                 route: '/balancing',
                 title: 'Доходы и расходы',
-                template: '/templates/income-and-expense/balancing.html',
+                template: '/templates/balancing/balancing.html',
                 styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
-
+                    new Balancing(this.openNewRoute.bind(this))
                 }
             },
             {
-                route: '/create-income-table',
+                route: '/balancing/create-income',
                 title: 'Создание дохода',
-                template: '/templates/income-and-expense/create-income-table.html',
+                template: '/templates/balancing/income-create.html',
                 styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
-
+                    new CreateIncomeBalancing(this.openNewRoute.bind(this))
                 }
             },
             {
-                route: '/edit-income-table',
+                route: '/balancing/edit-income',
                 title: 'Редактирование дохода',
-                template: '/templates/income-and-expense/edit-income-table.html',
+                template: '/templates//balancing/income-edit.html',
                 styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
@@ -167,9 +169,9 @@ export class Router {
                 }
             },
             {
-                route: '/create-expense-table',
+                route: '/balancing/create-expense',
                 title: 'Создание расхода',
-                template: '/templates/income-and-expense/create-expense-table.html',
+                template: '/templates/balancing/expense-create.html',
                 styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
@@ -177,9 +179,9 @@ export class Router {
                 }
             },
             {
-                route: '/edit-expense-table',
+                route: '/balancing/edit-expense',
                 title: 'Редактирование расхода',
-                template: '/templates/income-and-expense/edit-expense-table.html',
+                template: '/templates/balancing/expense-edit.html',
                 styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
