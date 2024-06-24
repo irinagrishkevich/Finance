@@ -1,30 +1,30 @@
 <section class="content">
-    <div class="container-fluid pt-5">
-        <h1 class="mb-4 mt-5">Главная</h1>
-        <div class="d-flex align-items-center gap-3">
-            <button type="button" class="btn btn-outline-secondary">Сегодня</button>
-            <button type="button" class="btn btn-outline-secondary">Неделя</button>
-            <button type="button" class="btn btn-outline-secondary">Месяц</button>
-            <button type="button" class="btn btn-outline-secondary">Год</button>
-            <button type="button" class="btn btn-outline-secondary">Все</button>
-            <button type="button" class="btn btn-outline-secondary">Интервал</button>
-            <div class="">
-                с <a href="#">Дата</a> по <a href="#">Дата</a>
+    <div class="container-fluid py-5 min-vh-100">
+        <h1 class="mb-4 mt-5 text-start">Главная</h1>
+        <div class="d-flex flex-wrap  align-items-lg-center align-items-md-start justify-content-md-start gap-3 mb-5">
+            <button type="button" class="btn btn-main btn-outline-secondary">Сегодня</button>
+            <button type="button" class="btn btn-main btn-outline-secondary">Неделя</button>
+            <button type="button" class="btn btn-main btn-outline-secondary">Месяц</button>
+            <button type="button" class="btn btn-main btn-outline-secondary">Год</button>
+            <button type="button" class="btn btn-main btn-outline-secondary">Все</button>
+            <button type="button" class="btn btn-main btn-outline-secondary">Интервал</button>
+            <div class="d-flex align-items-center">
+                с <a class="text-black mx-2" href="#">Дата</a> по <a class="text-black mx-2" href="#">Дата</a>
             </div>
         </div>
-            <div class="row">
-                <div class="col-6">
-                    <h3>Доходы</h3>
-                    <div>
-                        <canvas id="incomeChart"></canvas>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <h3>Расходы</h3>
-                    <div>
-                        <canvas id="expenseChart"></canvas>
-                    </div>
+        <div class="row pt-5 col-lg-12">
+            <div class="col-sm-6 p-0">
+                <h3 class="text-center mb-3">Доходы</h3>
+                <div class="border-end border-light-subtle">
+                    <canvas id="incomeChart"></canvas>
                 </div>
             </div>
+            <div class="col-sm-6 p-0">
+                <h3 class="text-center mb-3">Расходы</h3>
+                <div class="border-start border-light-subtle border-sm-0">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 </section>

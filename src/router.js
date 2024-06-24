@@ -8,6 +8,7 @@ import {PasswordEye} from "./utils/password-eye";
 import {Logout} from "./components/auth/logout";
 import {AuthUtils} from "./utils/auth-utils";
 import {HttpUtils} from "./utils/http-utils";
+import {IncomeCreate} from "./components/income/create";
 
 
 export class Router {
@@ -22,8 +23,8 @@ export class Router {
             {
                 route: '/',
                 title: 'Главная',
-                template: 'templates/main.html',
-                styles: 'style/style.css',
+                template: '/templates/main.html',
+                styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
                     new Main()
@@ -34,8 +35,8 @@ export class Router {
             {
                 route: '/login',
                 title: 'Вход в систему',
-                template: 'templates/auth/login.html',
-                styles: 'style/style.css',
+                template: '/templates/auth/login.html',
+                styles: '/style/style.css',
                 useLayout: false,
                 load: () => {
                     new Login(this.openNewRoute.bind(this))
@@ -45,8 +46,8 @@ export class Router {
             {
                 route: '/sign-up',
                 title: 'Регистрация',
-                template: 'templates/auth/sign-up.html',
-                styles: 'style/style.css',
+                template: '/templates/auth/sign-up.html',
+                styles: '/style/style.css',
                 useLayout: false,
                 load: () => {
                     new SignUp(this.openNewRoute.bind(this))
@@ -61,28 +62,28 @@ export class Router {
             {
                 route: '/income',
                 title: 'Доходы',
-                template: 'templates/income/income.html',
-                styles: 'style/style.css',
+                template: '/templates/income/income.html',
+                styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                    new Income()
+                    new Income(this.openNewRoute.bind(this))
                 }
             },
             {
-                route: '/create-income',
+                route: '/income/create',
                 title: 'Создание доходов',
-                template: 'templates/income/create-income.html',
-                styles: 'style/style.css',
+                template: '/templates/income/create.html',
+                styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
-
+                    new IncomeCreate(this.openNewRoute.bind(this))
                 }
             },
             {
-                route: '/edit-income',
+                route: '/income/edit',
                 title: 'Редактирование доходов',
-                template: 'templates/income/edit-income.html',
-                styles: 'style/style.css',
+                template: '/templates/income/edit.html',
+                styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
 
@@ -91,8 +92,8 @@ export class Router {
             {
                 route: '/expense',
                 title: 'Расходы',
-                template: 'templates/expense/expense.html',
-                styles: 'style/style.css',
+                template: '/templates/expense/expense.html',
+                styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
 
@@ -101,8 +102,8 @@ export class Router {
             {
                 route: '/create-expense',
                 title: 'Создание расходов',
-                template: 'templates/expense/create-expense.html',
-                styles: 'style/style.css',
+                template: '/templates/expense/create-expense.html',
+                styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
 
@@ -111,8 +112,8 @@ export class Router {
             {
                 route: '/edit-expense',
                 title: 'Редактирование расходов',
-                template: 'templates/expense/edit-expense.html',
-                styles: 'style/style.css',
+                template: '/templates/expense/edit-expense.html',
+                styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
 
@@ -121,8 +122,8 @@ export class Router {
             {
                 route: '/balancing',
                 title: 'Доходы и расходы',
-                template: 'templates/income-and-expense/balancing.html',
-                styles: 'style/style.css',
+                template: '/templates/income-and-expense/balancing.html',
+                styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
 
@@ -131,8 +132,8 @@ export class Router {
             {
                 route: '/create-income-table',
                 title: 'Создание дохода',
-                template: 'templates/income-and-expense/create-income-table.html',
-                styles: 'style/style.css',
+                template: '/templates/income-and-expense/create-income-table.html',
+                styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
 
@@ -141,8 +142,8 @@ export class Router {
             {
                 route: '/edit-income-table',
                 title: 'Редактирование дохода',
-                template: 'templates/income-and-expense/edit-income-table.html',
-                styles: 'style/style.css',
+                template: '/templates/income-and-expense/edit-income-table.html',
+                styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
 
@@ -151,8 +152,8 @@ export class Router {
             {
                 route: '/create-expense-table',
                 title: 'Создание расхода',
-                template: 'templates/income-and-expense/create-expense-table.html',
-                styles: 'style/style.css',
+                template: '/templates/income-and-expense/create-expense-table.html',
+                styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
 
@@ -161,8 +162,8 @@ export class Router {
             {
                 route: '/edit-expense-table',
                 title: 'Редактирование расхода',
-                template: 'templates/income-and-expense/edit-expense-table.html',
-                styles: 'style/style.css',
+                template: '/templates/income-and-expense/edit-expense-table.html',
+                styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
 
@@ -210,6 +211,7 @@ export class Router {
     async activateRoute(e, oldRoute = null) {
         if (oldRoute){
             const currentRoute = this.routes.find(item => item.route === oldRoute)
+
             if (currentRoute.scripts && currentRoute.scripts.length > 0) {
                 currentRoute.scripts.forEach(script => {
                     document.querySelector(`script[src='/js/${script}']`).remove()
@@ -218,6 +220,7 @@ export class Router {
         }
         const urlRoute = window.location.pathname
         const newRoute = this.routes.find(item => item.route === urlRoute)
+        console.log(newRoute)
 
         if (newRoute){
             if (newRoute.scripts && newRoute.scripts.length > 0) {
@@ -251,7 +254,8 @@ export class Router {
                     this.profileNameElement.innerText = this.userName
                     this.activateMenuItem(newRoute)
                 }
-                contentBlock.innerHTML = await fetch(newRoute.template).then(response => response.text())
+                contentBlock.innerHTML = await fetch( newRoute.template).then(response => response.text())
+                console.log(contentBlock)
             }
 
             if (newRoute.load && typeof newRoute.load === 'function'){
@@ -262,11 +266,13 @@ export class Router {
             alert('404')
             return
         }
+
     }
     activateMenuItem(route) {
+        console.log(route)
         document.querySelectorAll('.nav-link').forEach(item => {
             const href = item.getAttribute('href');
-            if ((route.route.includes(href) && href !== '/') || (route.route === '/' && href === '/')) {
+            if ((route.route.includes(href) && href !== '/') || route.route === '/' && href === '/') {
                 item.classList.add('active', 'text-white');
             } else {
                 item.classList.remove('active', 'text-white');
