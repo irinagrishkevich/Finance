@@ -7,8 +7,13 @@ import {Layout} from "./components/layout";
 import {PasswordEye} from "./utils/password-eye";
 import {Logout} from "./components/auth/logout";
 import {AuthUtils} from "./utils/auth-utils";
-import {HttpUtils} from "./utils/http-utils";
 import {IncomeCreate} from "./components/income/create";
+import {IncomeEdit} from "./components/income/edit";
+import {DeleteIncome} from "./components/income/delete";
+import {Expense} from "./components/expense/expense";
+import {ExpenseCreate} from "./components/expense/create";
+import {ExpenseEdit} from "./components/expense/edit";
+import {DeleteExpense} from "./components/expense/delete";
 
 
 export class Router {
@@ -86,7 +91,13 @@ export class Router {
                 styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
-
+                    new IncomeEdit(this.openNewRoute.bind(this))
+                }
+            },
+            {
+                route: '/income/delete',
+                load: () => {
+                    new DeleteIncome(this.openNewRoute.bind(this))
                 }
             },
             {
@@ -96,27 +107,33 @@ export class Router {
                 styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
-
+                    new Expense(this.openNewRoute.bind(this))
                 }
             },
             {
-                route: '/create-expense',
+                route: '/expense/create',
                 title: 'Создание расходов',
-                template: '/templates/expense/create-expense.html',
+                template: '/templates/expense/create.html',
                 styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
-
+                    new ExpenseCreate(this.openNewRoute.bind(this))
                 }
             },
             {
-                route: '/edit-expense',
+                route: '/expense/edit',
                 title: 'Редактирование расходов',
-                template: '/templates/expense/edit-expense.html',
+                template: '/templates/expense/edit.html',
                 styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
-
+                    new ExpenseEdit(this.openNewRoute.bind(this))
+                }
+            },
+            {
+                route: '/expense/delete',
+                load: () => {
+                    new DeleteExpense(this.openNewRoute.bind(this))
                 }
             },
             {
@@ -209,7 +226,7 @@ export class Router {
     }
 
     async activateRoute(e, oldRoute = null) {
-        if (oldRoute){
+        if (oldRoute) {
             const currentRoute = this.routes.find(item => item.route === oldRoute)
 
             if (currentRoute.scripts && currentRoute.scripts.length > 0) {
@@ -220,18 +237,18 @@ export class Router {
         }
         const urlRoute = window.location.pathname
         const newRoute = this.routes.find(item => item.route === urlRoute)
-        console.log(newRoute)
 
-        if (newRoute){
+
+        if (newRoute) {
             if (newRoute.scripts && newRoute.scripts.length > 0) {
                 for (const script of newRoute.scripts) {
                     await FileUtils.loadPageScript('/js/' + script)
                 }
             }
-            if (newRoute.title){
+            if (newRoute.title) {
                 this.titleElement.innerText = newRoute.title + ' | Lumincoin Finance'
             }
-            if (newRoute.template){
+            if (newRoute.template) {
                 let contentBlock = this.contentPageElement
                 if (newRoute.useLayout) {
                     this.contentPageElement.innerHTML = await fetch(newRoute.useLayout).then(response => response.text())
@@ -254,22 +271,23 @@ export class Router {
                     this.profileNameElement.innerText = this.userName
                     this.activateMenuItem(newRoute)
                 }
-                contentBlock.innerHTML = await fetch( newRoute.template).then(response => response.text())
-                console.log(contentBlock)
+                contentBlock.innerHTML = await fetch(newRoute.template).then(response => response.text())
+
             }
 
-            if (newRoute.load && typeof newRoute.load === 'function'){
+            if (newRoute.load && typeof newRoute.load === 'function') {
                 newRoute.load()
             }
-        }else{
+        } else {
             console.log('404')
             alert('404')
             return
         }
 
     }
+
     activateMenuItem(route) {
-        console.log(route)
+
         document.querySelectorAll('.nav-link').forEach(item => {
             const href = item.getAttribute('href');
             if ((route.route.includes(href) && href !== '/') || route.route === '/' && href === '/') {
@@ -281,14 +299,14 @@ export class Router {
 
         const categoryLink = document.querySelector('a[href="#submenu1"]');
         const submenu = document.getElementById('submenu1');
-        categoryLink.addEventListener('click', () =>{
+        categoryLink.addEventListener('click', () => {
             categoryLink.classList.toggle('active')
             categoryLink.classList.toggle('text-white');
 
         })
         if (route.route.includes('/income') || route.route.includes('/expense')) {
             submenu.classList.add('show')
-            categoryLink.classList.add('active','text-white')
+            categoryLink.classList.add('active', 'text-white')
             document.querySelectorAll('#submenu1 .nav-link').forEach(subItem => {
                 const subHref = subItem.getAttribute('href');
                 if (route.route.includes(subHref)) {

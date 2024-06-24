@@ -1,66 +1,20 @@
 <section class="content">
   <div class="container-fluid py-5 min-vh-100">
     <h1 class="mb-4 mt-5 ">Расходы</h1>
-    <div class="d-flex flex-wrap  align-items-center gap-3 mb-5">
-      <div class="border border-light-subtle rounded-3 p-3">
-        <h3 class="mb-3 fw-bold">Еда</h3>
-        <a href="edit-expense" class="btn btn-primary me-1 mb-1">Редактировать</a>
-        <button type="button" class="btn btn-danger me-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Удалить</button>
-      </div>
-      <div class="border border-light-subtle rounded-3 p-3">
-        <h3 class="mb-3 fw-bold">Жильё</h3>
-        <a href="edit-expense"  class="btn btn-primary me-1 mb-1">Редактировать</a>
-        <button type="button" class="btn btn-danger me-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Удалить</button>
-      </div>
-      <div class="border border-light-subtle rounded-3 p-3">
-        <h3 class="mb-3 fw-bold">Здоровье</h3>
-        <a href="edit-expense"  class="btn btn-primary me-1 mb-1">Редактировать</a>
-        <button type="button" class="btn btn-danger me-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Удалить</button>
-      </div>
-      <div class="border border-light-subtle rounded-3 p-3">
-        <h3 class="mb-3 fw-bold">Кафе</h3>
-        <a href="edit-expense"  class="btn btn-primary me-1 mb-1">Редактировать</a>
-        <button type="button" class="btn btn-danger me-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Удалить</button>
-      </div>
-      <div class="border border-light-subtle rounded-3 p-3">
-        <h3 class="mb-3 fw-bold">Авто</h3>
-        <a href="edit-expense"  class="btn btn-primary me-1 mb-1">Редактировать</a>
-        <button type="button" class="btn btn-danger me-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Удалить</button>
-      </div>
-      <div class="border border-light-subtle rounded-3 p-3">
-        <h3 class="mb-3 fw-bold">Одежда</h3>
-        <a href="edit-expense" class="btn btn-primary me-1 mb-1">Редактировать</a>
-        <button type="button" class="btn btn-danger me-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Удалить</button>
-      </div>
-      <div class="border border-light-subtle rounded-3 p-3">
-        <h3 class="mb-3 fw-bold">Развлечения</h3>
-        <a href="edit-expense"  class="btn btn-primary me-1 mb-1">Редактировать</a>
-        <button type="button" class="btn btn-danger me-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Удалить</button>
-      </div>
-      <div class="border border-light-subtle rounded-3 p-3">
-        <h3 class="mb-3 fw-bold">Счета</h3>
-        <a href="edit-expense"  class="btn btn-primary me-1 mb-1">Редактировать</a>
-        <button type="button" class="btn btn-danger me-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Удалить</button>
-      </div>
-      <div class="border border-light-subtle rounded-3 p-3">
-        <h3 class="mb-3 fw-bold">Спорт</h3>
-        <a href="edit-expense"  class="btn btn-primary me-1 mb-1">Редактировать</a>
-        <button type="button" class="btn btn-danger me-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Удалить</button>
-      </div>
-      <div class="border border-light-subtle rounded-3 p-3 d-flex align-items-center justify-content-center" style="width: 320px; height: 120px">
-        <a href="/create-expense" class="nav-link tex">+</a>
-      </div>
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-           aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="d-flex flex-column justify-content-center p-4">
-              <h5 class="modal-title" id="exampleModalLabel">Вы действительно хотите удалить категорию?</h5>
-              <div class="d-flex gap-2 justify-content-center align-items-center m-3">
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Да, удалить
-                </button>
-                <button type="button" class="btn btn-danger">Не удалять</button>
-              </div>
+    <div class="d-flex flex-wrap  align-items-center gap-3 mb-5" id="expense-categories">
+
+
+    </div>
+    <div class="modal fade" id="deleteExpenseCategory" tabindex="-1" aria-labelledby="deleteExpenseCategoryLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="d-flex flex-column justify-content-center p-4">
+            <h5 class="modal-title" id="exampleModalLabel">Вы действительно хотите удалить категорию?</h5>
+            <div class="d-flex gap-2 justify-content-center align-items-center m-3">
+              <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="deleteExpenseBtn">Да, удалить
+              </button>
+              <button type="button" class="btn btn-danger" id="cancelDeleteExpenseBtn">Не удалять</button>
             </div>
           </div>
         </div>

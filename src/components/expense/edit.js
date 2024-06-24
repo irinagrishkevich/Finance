@@ -1,6 +1,7 @@
 import {HttpUtils} from "../../utils/http-utils";
+import {Expense} from "./expense";
 
-export class IncomeEdit  {
+export class ExpenseEdit  {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
 
@@ -10,19 +11,19 @@ export class IncomeEdit  {
             return this.openNewRoute('/')
         }
 
-        this.saveIncome = document.getElementById('saveIncome')
-        this.cancelIncome = document.getElementById('cancelIncome')
-        this.nameIncome = document.getElementById('nameIncome')
+        this.saveExpense = document.getElementById('saveExpense')
+        this.cancelExpense = document.getElementById('cancelExpense')
+        this.nameExpense = document.getElementById('nameExpense')
 
 
-        this.saveIncome.addEventListener('click', this.saveIncomeClick.bind(this))
-        this.cancelIncome.addEventListener('click', this.cancelIncomeClick.bind(this))
+        this.saveExpense.addEventListener('click', this.saveExpenseClick.bind(this))
+        this.cancelExpense.addEventListener('click', this.cancelExpenseClick.bind(this))
 
-        this.getIncome(id).then()
+        this.getExpense(id).then()
     }
 
-    async getIncome(id) {
-        const result = await HttpUtils.request('/categories/income/'+ id )
+    async getExpense(id) {
+        const result = await HttpUtils.request('/categories/expense/'+ id )
         if (result.redirect) {
             return this.openNewRoute(result.redirect)
         }
@@ -31,16 +32,16 @@ export class IncomeEdit  {
             console.log(result.response.message)
             return alert('Ошибка при запросе категории дохода')
         }
-        this.IncomeCategoryData = result.response
-        this.nameIncome.value = result.response.title
+        this.ExpenseCategoryData = result.response
+        this.nameExpense.value = result.response.title
     }
-    async saveIncomeClick() {
+    async saveExpenseClick() {
         let changedData = ''
-        if (this.nameIncome.value && this.nameIncome.value !== this.IncomeCategoryData.title) {
-            changedData = this.nameIncome.value
+        if (this.nameExpense.value && this.nameExpense.value !== this.ExpenseCategoryData.title) {
+            changedData = this.nameExpense.value
         }
         if (changedData){
-            const result = await HttpUtils.request('/categories/income/' + this.IncomeCategoryData.id, 'PUT',true, {
+            const result = await HttpUtils.request('/categories/expense/' + this.ExpenseCategoryData.id, 'PUT',true, {
                 title: changedData
             })
             if (result.redirect) {
@@ -54,10 +55,10 @@ export class IncomeEdit  {
 
         }
 
-        return this.openNewRoute('/income')
+        return this.openNewRoute('/expense')
     }
-    cancelIncomeClick() {
-        return this.openNewRoute('/income')
+    cancelExpenseClick() {
+        return this.openNewRoute('/expense')
     }
 
 }

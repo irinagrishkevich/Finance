@@ -23,7 +23,7 @@ export class IncomeCreate{
 
             if (result.error || !result.response || (result.response && result.response.error)) {
                 console.log(result.response.error)
-                return alert('Ошибка при запросе категории')
+                return alert('Ошибка при создании категории дохода')
             }
 
             return this.openNewRoute('/income')

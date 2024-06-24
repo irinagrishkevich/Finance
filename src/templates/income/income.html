@@ -2,19 +2,21 @@
     <div class="container-fluid py-5 min-vh-100">
         <h1 class="mb-4 mt-5 ">Доходы</h1>
         <div class="d-flex flex-wrap  align-items-center gap-3 mb-5" id="income-categories">
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="deleteIncomeCategoryLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="d-flex flex-column justify-content-center p-4">
-                            <h5 class="modal-title" id="exampleModalLabel">Вы действительно хотите удалить категорию?
-                                Связанные доходы будут удалены навсегда.</h5>
-                            <div class="d-flex gap-2 justify-content-center align-items-center m-3">
-                                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Да, удалить
-                                </button>
-                                <button type="button" class="btn btn-danger">Не удалять</button>
-                            </div>
-                        </div>
+
+
+        </div>
+    </div>
+    <div class="modal fade" id="deleteIncomeCategory" tabindex="-1" aria-labelledby="deleteIncomeCategoryLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="d-flex flex-column justify-content-center p-4">
+                    <h5 class="modal-title" id="exampleModalLabel">Вы действительно хотите удалить категорию?
+                        Связанные доходы будут удалены навсегда.</h5>
+                    <div class="d-flex gap-2 justify-content-center align-items-center m-3">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="deleteIncomeBtn">Да, удалить
+                        </button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="cancelDeleteIncomeBtn">Нет, отмена</button>
                     </div>
                 </div>
             </div>

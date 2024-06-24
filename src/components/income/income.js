@@ -11,9 +11,10 @@ export class Income{
     }
 
     async loadIncomeCategories(){
-        const incomeCategories = await HttpUtils.request('/categories/income', 'GET', true)
+        const incomeCategories = await HttpUtils.request('/categories/income')
         this.incomeCategoriesElement.innerHTML = ''
         incomeCategories.response.forEach(incomeCategory => {
+
             const incomeCategoryElement = document.createElement('div')
             incomeCategoryElement.classList.add('border', 'border-light-subtle', 'rounded-3', 'p-3')
             const incomeCategoryTitleElement = document.createElement('h3')
@@ -26,14 +27,21 @@ export class Income{
             const incomeCategoryDeleteElement = document.createElement('button')
             incomeCategoryDeleteElement.classList.add('btn', 'btn-danger', 'me-5')
             incomeCategoryDeleteElement.innerText = 'Удалить'
-            incomeCategoryDeleteElement.dataset.bsToggle = 'modal'
-            incomeCategoryDeleteElement.dataset.bsTarget = '#deleteIncomeCategoryLabel'
+            incomeCategoryDeleteElement.setAttribute('data-bs-toggle', 'modal');
+            incomeCategoryDeleteElement.setAttribute('data-bs-target', '#deleteIncomeCategory')
 
             incomeCategoryElement.appendChild(incomeCategoryTitleElement)
             incomeCategoryElement.appendChild(incomeCategoryEditElement)
             incomeCategoryElement.appendChild(incomeCategoryDeleteElement)
 
             this.incomeCategoriesElement.appendChild(incomeCategoryElement)
+
+            incomeCategoryDeleteElement.addEventListener('click', () => {
+                this.openNewRoute('/income/delete?id=' + incomeCategory.id)
+            })
+
+
+
 
         })
 
