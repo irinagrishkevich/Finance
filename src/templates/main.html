@@ -2,14 +2,14 @@
     <div class="container-fluid py-5 min-vh-100">
         <h1 class="mb-4 mt-5 text-start">Главная</h1>
         <div class="d-flex flex-wrap  align-items-lg-center align-items-md-start justify-content-md-start gap-3 mb-5">
-            <button type="button" class="btn btn-main btn-outline-secondary">Сегодня</button>
-            <button type="button" class="btn btn-main btn-outline-secondary">Неделя</button>
-            <button type="button" class="btn btn-main btn-outline-secondary">Месяц</button>
-            <button type="button" class="btn btn-main btn-outline-secondary">Год</button>
-            <button type="button" class="btn btn-main btn-outline-secondary">Все</button>
-            <button type="button" class="btn btn-main btn-outline-secondary">Интервал</button>
-            <div class="d-flex align-items-center">
-                с <a class="text-black mx-2" href="#">Дата</a> по <a class="text-black mx-2" href="#">Дата</a>
+            <button type="button" class="btn btn-outline-secondary active">Сегодня</button>
+            <button type="button" class="btn btn-outline-secondary">Неделя</button>
+            <button type="button" class="btn btn-outline-secondary">Месяц</button>
+            <button type="button" class="btn btn-outline-secondary">Год</button>
+            <button type="button" class="btn btn-outline-secondary">Все</button>
+            <button type="button" class="btn btn-outline-secondary" id="interval-button">Интервал</button>
+            <div class="text-black d-flex align-items-center flex-wrap gap-sm-0 gap-2">
+                с<input type="date" id="start-date" class="mx-sm-2 ms-2 text-black" > <div class="">по<input type="date" id="end-date" class="ms-2 text-black" ></div>
             </div>
         </div>
         <div class="row pt-5 col-lg-12">

@@ -20,62 +20,25 @@ h1 {
 a, .image, #balance {
     cursor: pointer;
 }
-
-.dropdown-menu {
-    transform: translate3d(0px, 40px, 0px) !important;
-    padding: 0;
-    margin: 0;
-}
-.logout{
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    width: 300px;
-    height: 200px;
-}
-.logout .dropdown-item{
-    cursor: pointer;
-}
-
-
-
 .btn-main {
     width: 100px;
 }
-.modal-balance {
-    position: fixed;
-    z-index: 1;
-    left: 0;
+
+
+.close {
+    position: absolute;
+    right: 20px;
     top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+    color: #aaa;
+    font-size: 23px;
 }
 
-.modal-content {
-    position: fixed;
-    top: 50%;
-    left: 3%;
-    background-color: #fefefe;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 200px;
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
-.modal-drop{
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-color: rgba(0,0,0,0.6);
-}
-
-
-
-
 
 
 @media (max-width: 768px) {
@@ -83,11 +46,14 @@ a, .image, #balance {
         cursor: pointer;
     }
     #burger.open {
-        height: 450px;
+        height: 520px;
+    }
+    .burger-menu{
+        padding-top: 10px ;
     }
     #burger {
         background-color: rgba(255, 255, 255, 0.8);
-        font-size: 30px;
+        font-size: 27px;
         position: fixed;
         width: 100%;
         height: 65px;
@@ -100,8 +66,13 @@ a, .image, #balance {
     #burgerMenu {
         display: flex;
         flex-direction: column;
-        gap: 5px;
         padding-top: 80px;
+    }
+    #balance{
+
+    }
+    #profile{
+
     }
     .table-responsive{
         max-width: 100%;

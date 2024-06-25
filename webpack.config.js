@@ -27,7 +27,6 @@ module.exports = {
                 {from: "./src/static/fonts", to: "style/fonts"},
                 {from: "./node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2", to: "style/fonts"},
                 {from: "./node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff", to: "style/fonts"},
-                // {from: "./src/static/fonts", to: "fonts"},
                 {from: "./src/static/img", to: "img"},
                 {from: "./node_modules/bootstrap/dist/css/bootstrap.min.css", to: "style"},
                 {from: "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js", to: "js"},

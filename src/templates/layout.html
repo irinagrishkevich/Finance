@@ -1,15 +1,15 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
-        <div class="col-auto col-md-3 px-0  d-flex menu-tab">
+        <div class="col-auto col-md-3 col-xl-2 px-0  d-flex menu-tab">
             <div class="d-flex flex-column justify-content-between align-items-md-start align-items-center p-0 pt-md-2 vh-md-100 border "
                  id="burger">
                 <a href="/" class="d-none d-md-flex align-items-center text-center mt-5 mb-3 px-3">
-                    <img src="img/Logo.png" class="img" alt="logo">
+                    <img src="/img/Logo.png" class="img" alt="logo">
                 </a>
 
                 <div class="d-flex d-md-none position-absolute align-items-center burger-menu px-3 w-100 justify-content-between">
                     <a href="/" class="d-flex align-items-center m-0  img-link">
-                        <img src="img/Logo.png" class="img d-block " alt="logo">
+                        <img src="/img/Logo.png" class="img d-block " alt="logo">
                     </a>
                     <div class="cursor-pointer" id="burgerTab"><i class="d-inline bi bi-list"></i></div>
                 </div>
@@ -45,15 +45,15 @@
                         </ul>
                     </li>
                 </ul>
-                <div class="d-none d-md-flex nav-item nav-link text-black px-3 gap-2 text-center">Баланс: <span class="text-primary"
+                <div class="d-none d-md-flex nav-item nav-link text-black px-3 gap-2 text-center" data-bs-toggle="modal" data-bs-target="#balanceModal" id="balanceBlock">Баланс: <span class="text-primary"
                                                                                               id="balance">1000 $</span>
 
                 </div>
 
                 <hr class="d-none d-md-block w-100">
-                <div class="sidebar d-none d-md-flex nav-item nav-link d-flex align-items-center px-3 mb-3">
+                <div class="sidebar d-none d-md-flex nav-item nav-link d-flex align-items-center px-3 mb-3" id="profile">
 
-                    <div class="image rounded-circle bg-light flex-column p-2 me-2" id="userIcon">
+                    <div class="image rounded-circle bg-light flex-column p-2 me-2" id="userIcon"  data-bs-toggle="modal" data-bs-target="#userMenu">
                         <i class="bi bi-person"></i>
                     </div>
                     <div class="info">
@@ -71,24 +71,45 @@
         </div>
 
     </div>
-    <div class="modal-drop d-none" id="userMenu">
-        <div class="logout dropdown-menu-dark text-center d-flex align-items-center border border-black rounded bg-secondary-subtle"
-             >
-            <p class="fw-bold fs-5 m-0 p-0">Вы действительно хотите выйти из системы?
-                <a href="/logout" class="btn btn-primary btn-lg my-3" id="logout">
-                    <i class="bi bi-box-arrow-left"></i></i> Выйти
-                </a>
-            </p>
+    <div class="modal fade modal-drop" id="userMenu" tabindex="-1" aria-labelledby="modalTable"
+         aria-hidden="true">
+        <div class="logout dropdown-menu-dark d-flex modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="d-flex flex-column justify-content-center p-4">
+                    <h5 class="modal-title text-center" id="exampleModalLabel">Вы действительно хотите выйти из системы?</h5>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <a href="/logout" class="btn btn-primary btn-lg my-3" id="logout" data-bs-dismiss="modal">
+                            <i class="bi bi-box-arrow-left"></i></i> Выйти
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade modal-drop" id="balanceModal" tabindex="-1" aria-labelledby="modalTable"
+         aria-hidden="true">
+        <div class="d-flex modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="d-flex flex-column justify-content-center p-4">
+                    <span class="close" data-bs-dismiss="modal">&times;</span>
+                    <h5 class="modal-title text-center">Изменить баланс?</h5>
+                    <div class="d-flex justify-content-center gap-3 align-items-center mt-3">
+                        <input type="number" id="balanceInput" value="0">
+                        <button class="btn mt-1 btn-primary" id="saveBalanceButton" data-bs-dismiss="modal">Сохранить</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="balanceModal" class="modal-balance d-none">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p>Изменить баланс?</p>
-            <input type="number" id="balanceInput" value="0">
-            <button class="btn mt-1 btn-primary" id="saveBalanceButton">Сохранить</button>
-        </div>
-    </div>
+
+<!--    <div id="balanceModal" class="modal-balance d-none">-->
+<!--        <div class="modal-content">-->
+<!--            <span class="close">&times;</span>-->
+<!--            <p>Изменить баланс?</p>-->
+<!--            <input type="number" id="balanceInput" value="0">-->
+<!--            <button class="btn mt-1 btn-primary" id="saveBalanceButton">Сохранить</button>-->
+<!--        </div>-->
+<!--    </div>-->
 </div>
 
