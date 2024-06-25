@@ -35,8 +35,9 @@ export class Balancing {
             editCell.innerHTML = `<a type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash me-1 "></i></a><a href="edit-income-table"><i class="bi bi-pencil text-black"></i></a>`
             row.appendChild(editCell);
 
-
             this.balancingRowElements.appendChild(row);
         });
     }
+
+    
 }

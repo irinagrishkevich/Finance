@@ -16,6 +16,7 @@ import {ExpenseEdit} from "./components/expense/edit";
 import {DeleteExpense} from "./components/expense/delete";
 import {Balancing} from "./components/balancing/balancing";
 import {CreateIncomeBalancing} from "./components/balancing/create-income";
+import {CreateExpenseBalancing} from "./components/balancing/create-expense";
 
 
 export class Router {
@@ -175,7 +176,7 @@ export class Router {
                 styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
-
+                    new CreateExpenseBalancing(this.openNewRoute.bind(this))
                 }
             },
             {

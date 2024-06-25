@@ -2,13 +2,24 @@
   <div class="container-fluid py-5 min-vh-100">
     <h1 class="mb-4 mt-5 ">Создание расхода</h1>
     <div class="d-flex flex-wrap  align-items-center gap-3 mt-5 col-lg-4">
-      <input type="text" name="name-income" id="typeIncome" placeholder="Тип..." class="form-control">
-      <input type="text" name="name-income" id="categoryIncome" placeholder="Категория..." class="form-control">
-      <input type="text" name="name-income" id="sumIncome" placeholder="Сумма в $..." class="form-control">
-      <input type="text" name="name-income" id="DateIncome" placeholder="Дата..." class="form-control">
-      <input type="text" name="name-income" id="commentIncome" placeholder="Комментарий..." class="form-control">
-      <button type="button" class="btn btn-success me-1">Сохранить</button>
-      <button type="button" class="btn btn-danger me-5">Отмена</button>
+      <select type="text" name="name-income" id="typeSelect" class="form-control">
+        <option disabled selected value="disabled">Тип...</option>
+        <option value="1">Доход</option>
+        <option value="2" selected>Расход</option>
+      </select>
+      <span id="typeSelect-error" class="error invalid-feedback">Пожалуйста, выберите тип</span>
+      <select type="text" id="categorySelect" class="form-control">
+        <option disabled selected value="disabled">Категория...</option>
+      </select>
+      <span id="categorySelect-error" class="error invalid-feedback">Пожалуйста, выберите Категорию</span>
+      <input type="number" name="name-income" id="sumInput" placeholder="Сумма в $..." class="form-control">
+      <span id="sumInput-error" class="error invalid-feedback">Пожалуйста, введите сумму</span>
+      <input type="date" name="name-income" id="dateInput" placeholder="Дата..." class="form-control">
+      <span id="dateInput-error" class="error invalid-feedback">Пожалуйста, выберите дату</span>
+      <input type="text" name="name-income" id="commentInput" placeholder="Комментарий..." class="form-control">
+      <span id="commentInput-error" class="error invalid-feedback">Пожалуйста, введите комментарий</span>
+      <button type="button" class="btn btn-success me-1" id="saveButton">Сохранить</button>
+      <button type="button" class="btn btn-danger me-5" id="cancelButton">Отмена</button>
     </div>
   </div>
 </section>
