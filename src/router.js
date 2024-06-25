@@ -17,6 +17,9 @@ import {DeleteExpense} from "./components/expense/delete";
 import {Balancing} from "./components/balancing/balancing";
 import {CreateIncomeBalancing} from "./components/balancing/create-income";
 import {CreateExpenseBalancing} from "./components/balancing/create-expense";
+import {EditIncomeBalancing} from "./components/balancing/edit-income";
+import {EditExpenseBalancing} from "./components/balancing/edit-expense";
+import {DeleteBalancingOperation} from "./components/balancing/delete";
 
 
 export class Router {
@@ -162,11 +165,11 @@ export class Router {
             {
                 route: '/balancing/edit-income',
                 title: 'Редактирование дохода',
-                template: '/templates//balancing/income-edit.html',
+                template: '/templates/balancing/income-edit.html',
                 styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
-
+                    new EditIncomeBalancing(this.openNewRoute.bind(this))
                 }
             },
             {
@@ -186,7 +189,13 @@ export class Router {
                 styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
-
+                    new EditExpenseBalancing(this.openNewRoute.bind(this))
+                }
+            },
+            {
+                route: '/balancing/delete',
+                load: () => {
+                    new DeleteBalancingOperation(this.openNewRoute.bind(this))
                 }
             },
         ]

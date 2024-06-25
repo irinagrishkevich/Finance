@@ -25,13 +25,13 @@ export class CreateIncomeBalancing {
 
      validateField() {
         let isValid = true
-         if (this.categorySelectElement.value === 'disabled') {
-             this.categorySelectElement.classList.add('is-invalid')
-             isValid = false
+        if (this.typeSelectElement.value === '1' || this.typeSelectElement.value === '2') {
 
-         } else {
-             this.categorySelectElement.classList.remove('is-invalid')
-         }
+            this.typeSelectElement.classList.remove('is-invalid')
+        } else if (this.typeSelectElement.value === 'disabled') {
+            this.typeSelectElement.classList.add('is-invalid')
+            isValid = false
+        }
 
         if (this.sumSelectElement.value && this.sumSelectElement.value > 0) {
             this.sumSelectElement.classList.remove('is-invalid')
