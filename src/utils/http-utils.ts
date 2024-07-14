@@ -1,29 +1,30 @@
 
 import {AuthUtils} from "./auth-utils";
 import config from "../config/config";
+import {ErrorRes} from "../types/error-res.type";
 
 
 export class HttpUtils{
-    static async request(url, method = 'GET', useAuth = true, body = null) {
-        const result = {
+    public static async request(url: string, method: string = 'GET', useAuth:boolean = true, body: any | null = null): Promise<ErrorRes> {
+        const result: ErrorRes = {
             error: false,
             response: null,
             redirect: null
         }
 
 
-        const params = {
+        const params: {method: string, headers: HeadersInit, body?: string } | undefined = {
             method: method,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
 
-            },
-        }
-        let token = null
-        if (useAuth){
-            token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)
+            }, body: body
 
+        }
+        let token: string | null = null
+        if (useAuth){
+            token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey) as string
             if (token){
                 params.headers['x-auth-token'] = token
             }
@@ -31,10 +32,9 @@ export class HttpUtils{
         if (body){
             params.body = JSON.stringify(body)
         }
-
-        let response = null
+        let response : Response | null = null
         try {
-            response = await fetch(config.host + url, params)
+            response = await fetch(config.host + url, params as RequestInit)
             result.response = await response.json()
         } catch (e){
             result.error = true
@@ -49,7 +49,7 @@ export class HttpUtils{
                     result.redirect = '/login'
                 } else {
                     // 2 токена устарел/невалидный (надо обновить)
-                    const updatedTokenResult = await AuthUtils.updateRefreshToken()
+                    const updatedTokenResult: boolean = await AuthUtils.updateRefreshToken()
 
                     if (updatedTokenResult){
                         // запрос повторно

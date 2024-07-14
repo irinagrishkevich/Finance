@@ -1,12 +1,15 @@
 import config from "../config/config";
+import {UserInfo} from "../types/user-info.type";
+import {RefreshResponseType} from "../types/refresh-response.type";
 
 
 export class AuthUtils {
-    static accessTokenKey = 'accessToken'
-    static refreshTokenKey = 'refreshToken'
-    static userInfoKey = 'userInfo'
+    public static accessTokenKey: string = 'accessToken'
+    private static refreshTokenKey: string = 'refreshToken'
+    private static userInfoKey: string = 'userInfo'
 
-    static setAuthInfo(accessToken, refreshToken, userInfo = null) {
+
+    public static setAuthInfo(accessToken:string, refreshToken: string, userInfo: UserInfo | null = null):void {
         localStorage.setItem(this.accessTokenKey, accessToken)
         localStorage.setItem(this.refreshTokenKey, refreshToken)
         if (userInfo){
@@ -14,30 +17,30 @@ export class AuthUtils {
         }
     }
 
-    static removeAuthInfo() {
+    public static removeAuthInfo():void {
         localStorage.removeItem(this.accessTokenKey)
         localStorage.removeItem(this.refreshTokenKey)
         localStorage.removeItem(this.userInfoKey)
     }
 
 
-    static getAuthInfo(key = null) {
+    public static getAuthInfo(key: string | null = null):string | { [key: string]: string | UserInfo | null } | null{
         if (key && [this.accessTokenKey, this.refreshTokenKey, this.userInfoKey].includes(key)) {
             return localStorage.getItem(key)
         } else {
             return {
                 [this.accessTokenKey]: localStorage.getItem(this.accessTokenKey),
                 [this.refreshTokenKey]: localStorage.getItem(this.refreshTokenKey),
-                [this.userInfoKey]: JSON.parse(localStorage.getItem(this.userInfoKey))
+                [this.userInfoKey]: JSON.parse(localStorage.getItem(this.userInfoKey) as string) as UserInfo | null
             }
         }
     }
 
-    static async updateRefreshToken() {
-        let result = false
-        const refreshToken = this.getAuthInfo(this.refreshTokenKey)
+    public static async updateRefreshToken(): Promise<boolean> {
+        let result: boolean = false
+        const refreshToken: string | null = this.getAuthInfo(this.refreshTokenKey) as string
         if (refreshToken) {
-            const response = await fetch(config.api + '/refresh', {
+            const response: Response | null = await fetch(config.host + '/refresh', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -48,8 +51,8 @@ export class AuthUtils {
                 })
             })
             if (response && response.status === 200) {
-                const tokens = await response.json()
-                if (tokens && !tokens.error) {
+                const tokens: RefreshResponseType | null = await response.json()
+                if (tokens && !tokens.error && tokens.accessToken && tokens.refreshToken) {
                     this.setAuthInfo(tokens.accessToken, tokens.refreshToken)
                     result = true
                 }
