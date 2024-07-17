@@ -1,9 +1,11 @@
 
 import {HttpUtils} from "../../utils/http-utils";
 import {AuthUtils} from "../../utils/auth-utils";
+import {DefaultResponseType} from "../../types/default-response.type";
 
 
 export class Logout {
+    readonly openNewRoute: (url: string | null) => Promise<void>
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
 
@@ -13,13 +15,18 @@ export class Logout {
         this.logout().then()
     }
 
-    async logout() {
-        await HttpUtils.request('/logout', 'POST', false,{
+    private async logout(): Promise<void> {
+        const result: DefaultResponseType =  await HttpUtils.request('/logout', 'POST', false,{
             refreshToken: AuthUtils.getAuthInfo(AuthUtils.refreshTokenKey)
         })
+        if (result.error) {
+            console.log(result.error)
+            return
+        }
+
         AuthUtils.removeAuthInfo()
 
-        this.openNewRoute('/login')
+        await this.openNewRoute('/login')
     }
 
 }
