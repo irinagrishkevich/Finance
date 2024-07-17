@@ -1,8 +1,12 @@
-
 import {HttpUtils} from "../../utils/http-utils";
+import {CategoriesIncomeType} from "../../types/categories-income.type";
+import {DefaultResponseType} from "../../types/default-response.type";
 
 export class Expense {
-    constructor(openNewRoute){
+    readonly openNewRoute: (url: string | null) => Promise<void>
+    readonly expenseCategoriesElement: HTMLElement | null
+
+    constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
 
         this.expenseCategoriesElement = document.getElementById('expense-categories')
@@ -10,21 +14,23 @@ export class Expense {
         this.loadExpenseCategories().then()
     }
 
-    async loadExpenseCategories(){
-        const expenseCategories = await HttpUtils.request('/categories/expense')
-        this.expenseCategoriesElement.innerHTML = ''
-        expenseCategories.response.forEach(expenseCategory => {
+    private async loadExpenseCategories(): Promise<void> {
+        const expenseCategories: CategoriesIncomeType | DefaultResponseType = await HttpUtils.request('/categories/expense')
+        if (this.expenseCategoriesElement) {
+            this.expenseCategoriesElement.innerHTML = ''
+        }
+        (expenseCategories as CategoriesIncomeType).response.forEach(expenseCategory => {
 
-            const expenseCategoryElement = document.createElement('div')
+            const expenseCategoryElement: HTMLElement = document.createElement('div')
             expenseCategoryElement.classList.add('border', 'border-light-subtle', 'rounded-3', 'p-3')
-            const expenseCategoryTitleElement = document.createElement('h3')
+            const expenseCategoryTitleElement: HTMLElement = document.createElement('h3')
             expenseCategoryTitleElement.classList.add('mb-3', 'fw-bold')
             expenseCategoryTitleElement.innerText = expenseCategory.title
-            const expenseCategoryEditElement = document.createElement('a')
+            const expenseCategoryEditElement: HTMLAnchorElement = document.createElement('a')
             expenseCategoryEditElement.classList.add('btn', 'btn-primary', 'me-1', 'mb-1')
             expenseCategoryEditElement.innerText = 'Редактировать'
             expenseCategoryEditElement.href = '/expense/edit?id=' + expenseCategory.id
-            const expenseCategoryDeleteElement = document.createElement('button')
+            const expenseCategoryDeleteElement: HTMLButtonElement = document.createElement('button')
             expenseCategoryDeleteElement.classList.add('btn', 'btn-danger', 'me-5')
             expenseCategoryDeleteElement.innerText = 'Удалить'
             expenseCategoryDeleteElement.setAttribute('data-bs-toggle', 'modal');
@@ -33,19 +39,18 @@ export class Expense {
             expenseCategoryElement.appendChild(expenseCategoryTitleElement)
             expenseCategoryElement.appendChild(expenseCategoryEditElement)
             expenseCategoryElement.appendChild(expenseCategoryDeleteElement)
-
-            this.expenseCategoriesElement.appendChild(expenseCategoryElement)
+            if (this.expenseCategoriesElement) {
+                this.expenseCategoriesElement.appendChild(expenseCategoryElement)
+            }
 
             expenseCategoryDeleteElement.addEventListener('click', () => {
                 this.openNewRoute('/expense/delete?id=' + expenseCategory.id)
             })
 
 
-
-
         })
 
-        const expenseCategoryAddElement = document.createElement('div')
+        const expenseCategoryAddElement: HTMLDivElement = document.createElement('div')
         expenseCategoryAddElement.classList.add('border', 'border-light-subtle', 'rounded-3', 'p-3', 'd-flex', 'align-items-center', 'justify-content-center')
         expenseCategoryAddElement.style.width = '320px'
         expenseCategoryAddElement.style.cursor = 'pointer'
@@ -55,8 +60,9 @@ export class Expense {
         expenseCategoryAddElement.addEventListener('click', () => {
             this.openNewRoute('/expense/create')
         })
-
-        this.expenseCategoriesElement.appendChild(expenseCategoryAddElement)
+        if (this.expenseCategoriesElement) {
+            this.expenseCategoriesElement.appendChild(expenseCategoryAddElement)
+        }
 
 
     }
