@@ -1,8 +1,12 @@
-import config from "../../config/config";
 import {HttpUtils} from "../../utils/http-utils";
+import {CategoriesIncomeType} from "../../types/categories-income.type";
+import {DefaultResponseType} from "../../types/default-response.type";
 
-export class Income{
-    constructor(openNewRoute){
+export class Income {
+    readonly openNewRoute: (url: string | null) => Promise<void>
+    readonly incomeCategoriesElement: HTMLElement | null
+
+    constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
 
         this.incomeCategoriesElement = document.getElementById('income-categories')
@@ -10,21 +14,24 @@ export class Income{
         this.loadIncomeCategories().then()
     }
 
-    async loadIncomeCategories(){
-        const incomeCategories = await HttpUtils.request('/categories/income')
-        this.incomeCategoriesElement.innerHTML = ''
-        incomeCategories.response.forEach(incomeCategory => {
+    private async loadIncomeCategories(): Promise<void> {
+        const incomeCategories: CategoriesIncomeType | DefaultResponseType = await HttpUtils.request('/categories/income')
+        if (this.incomeCategoriesElement) {
+            this.incomeCategoriesElement.innerHTML = ''
+        }
 
-            const incomeCategoryElement = document.createElement('div')
+        (incomeCategories as CategoriesIncomeType).response.forEach(incomeCategory => {
+
+            const incomeCategoryElement: HTMLElement = document.createElement('div')
             incomeCategoryElement.classList.add('border', 'border-light-subtle', 'rounded-3', 'p-3')
-            const incomeCategoryTitleElement = document.createElement('h3')
+            const incomeCategoryTitleElement: HTMLElement = document.createElement('h3')
             incomeCategoryTitleElement.classList.add('mb-3', 'fw-bold')
             incomeCategoryTitleElement.innerText = incomeCategory.title
-            const incomeCategoryEditElement = document.createElement('a')
+            const incomeCategoryEditElement: HTMLAnchorElement = document.createElement('a')
             incomeCategoryEditElement.classList.add('btn', 'btn-primary', 'me-1', 'mb-1')
             incomeCategoryEditElement.innerText = 'Редактировать'
             incomeCategoryEditElement.href = '/income/edit?id=' + incomeCategory.id
-            const incomeCategoryDeleteElement = document.createElement('button')
+            const incomeCategoryDeleteElement: HTMLButtonElement = document.createElement('button')
             incomeCategoryDeleteElement.classList.add('btn', 'btn-danger', 'me-5')
             incomeCategoryDeleteElement.innerText = 'Удалить'
             incomeCategoryDeleteElement.setAttribute('data-bs-toggle', 'modal');
@@ -33,19 +40,19 @@ export class Income{
             incomeCategoryElement.appendChild(incomeCategoryTitleElement)
             incomeCategoryElement.appendChild(incomeCategoryEditElement)
             incomeCategoryElement.appendChild(incomeCategoryDeleteElement)
+            if (this.incomeCategoriesElement) {
+                this.incomeCategoriesElement.appendChild(incomeCategoryElement)
 
-            this.incomeCategoriesElement.appendChild(incomeCategoryElement)
+            }
 
             incomeCategoryDeleteElement.addEventListener('click', () => {
                 this.openNewRoute('/income/delete?id=' + incomeCategory.id)
             })
 
 
-
-
         })
 
-        const incomeCategoryAddElement = document.createElement('div')
+        const incomeCategoryAddElement: HTMLDivElement = document.createElement('div')
         incomeCategoryAddElement.classList.add('border', 'border-light-subtle', 'rounded-3', 'p-3', 'd-flex', 'align-items-center', 'justify-content-center')
         incomeCategoryAddElement.style.width = '320px'
         incomeCategoryAddElement.style.cursor = 'pointer'
@@ -55,8 +62,10 @@ export class Income{
         incomeCategoryAddElement.addEventListener('click', () => {
             this.openNewRoute('/income/create')
         })
+        if (this.incomeCategoriesElement) {
+            this.incomeCategoriesElement.appendChild(incomeCategoryAddElement)
 
-        this.incomeCategoriesElement.appendChild(incomeCategoryAddElement)
+        }
 
 
     }
