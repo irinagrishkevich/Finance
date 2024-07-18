@@ -1,27 +1,20 @@
 
 import {AuthUtils} from "./auth-utils";
 import config from "../config/config";
-import {ErrorRes} from "../types/error-res.type";
+import {DefaultResponseType} from "../types/default-response.type";
 
 
-export class HttpUtils{
-    public static async request(url: string, method: string = 'GET', useAuth:boolean = true, body: any | null = null): Promise<ErrorRes> {
-        const result: ErrorRes = {
-            error: false,
-            response: null,
-            redirect: null
-        }
 
-
-        const params: {method: string, headers: HeadersInit, body?: string } | undefined = {
+export class HttpUtils{ // error
+    public static async request(url: string, method: string = 'GET', useAuth:boolean = true, body: any | null = null): Promise<any> {
+        const params: any = {
             method: method,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-
-            }, body: body
-
+            },
         }
+
         let token: string | null = null
         if (useAuth){
             token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey) as string
@@ -32,21 +25,21 @@ export class HttpUtils{
         if (body){
             params.body = JSON.stringify(body)
         }
-        let response : Response | null = null
-        try {
-            response = await fetch(config.host + url, params as RequestInit)
-            result.response = await response.json()
-        } catch (e){
-            result.error = true
-            return  result
-        }
-
+        const response : Response = await fetch(config.host + url, params);
+        // try {
+        //     response = await fetch(config.host + url, params)
+        //     const result
+        //     result.response = await response.json()
+        // } catch (e){
+        //     result.error = true
+        //     return  result
+        // }
         if (response.status < 200 || response.status >= 300) {
-            result.error = true
             if (useAuth && response.status === 401){
+                const result: DefaultResponseType | Response = await this.request(url, method, useAuth, body)
                 if (!token){
                     // 1 токена нет
-                    result.redirect = '/login'
+                    (result as DefaultResponseType).redirect
                 } else {
                     // 2 токена устарел/невалидный (надо обновить)
                     const updatedTokenResult: boolean = await AuthUtils.updateRefreshToken()
@@ -55,7 +48,7 @@ export class HttpUtils{
                         // запрос повторно
                         return this.request(url, method, useAuth, body)
                     }else {
-                        result.redirect = '/login'
+                        (result as DefaultResponseType).redirect
                     }
 
 
@@ -64,6 +57,6 @@ export class HttpUtils{
 
             }
         }
-        return result
+        return await response.json()
     }
 }

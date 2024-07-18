@@ -1,5 +1,5 @@
 export type ErrorRes = {
     error: boolean,
     response: Response | null,
-    redirect: '/login' | null,
+    redirect: '/login',
 }

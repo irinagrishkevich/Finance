@@ -5,7 +5,7 @@ import {RefreshResponseType} from "../types/refresh-response.type";
 
 export class AuthUtils {
     public static accessTokenKey: string = 'accessToken'
-    private static refreshTokenKey: string = 'refreshToken'
+    public static refreshTokenKey: string = 'refreshToken'
     private static userInfoKey: string = 'userInfo'
 
 
