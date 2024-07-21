@@ -1,12 +1,13 @@
 import {HttpUtils} from "../../utils/http-utils";
 import {DefaultResponseType} from "../../types/default-response.type";
 import {CategoriesIncomeType} from "../../types/categories-income.type";
+import {OpenNewRouteFunction} from "../../types/open-new-route.type";
 
 export class DeleteIncome {
-    readonly openNewRoute: (url: string) => void;
+readonly openNewRoute: OpenNewRouteFunction;
     private deleteIncomeBtnElement: HTMLInputElement | null;
     private cancelDeleteIncomeBtnElement: HTMLInputElement | null;
-    constructor(openNewRoute) {
+    constructor(openNewRoute: OpenNewRouteFunction) {
         this.openNewRoute = openNewRoute
 
         this.deleteIncomeBtnElement = document.getElementById('deleteIncomeBtn') as HTMLInputElement;
@@ -26,9 +27,9 @@ export class DeleteIncome {
         }
         const result: CategoriesIncomeType | DefaultResponseType = await HttpUtils.request('/categories/income/' + id,  'DELETE' )
         if ((result as DefaultResponseType).redirect) {
-            return this.openNewRoute((result as DefaultResponseType).redirect)
+            return this.openNewRoute('/login')
         }
-        if ((result as DefaultResponseType).error || !((result as CategoriesIncomeType).response || (result as CategoriesIncomeType).response)) {
+        if ((result as DefaultResponseType).error || !(result as CategoriesIncomeType)) {
             console.log("Ошибка при удалении категории дохода")
             return
         }

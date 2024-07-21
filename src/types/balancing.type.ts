@@ -1,7 +1,4 @@
 export type BalancingType = {
-    response: BalancingDataType
-}
-export type BalancingDataType = {
     id: number,
     type: string,
     category: string,

@@ -3,9 +3,10 @@ import {CategoriesIncomeType} from "../../types/categories-income.type";
 import {DefaultResponseType} from "../../types/default-response.type";
 import {CreateDataType} from "../../types/create-data.type";
 import {BalancingType} from "../../types/balancing.type";
+import {OpenNewRouteFunction} from "../../types/open-new-route.type";
 
 export class CreateIncomeBalancing {
-    readonly openNewRoute: (url: string | null) => Promise<void>
+    readonly openNewRoute: OpenNewRouteFunction
     private categoryElement: HTMLOptionElement | null
     private typeCategoryName: string | null
     readonly typeSelectElement: HTMLInputElement | null
@@ -13,8 +14,10 @@ export class CreateIncomeBalancing {
     readonly sumSelectElement: HTMLInputElement | null
     readonly dateSelectElement: HTMLInputElement | null
     readonly commentSelectElement: HTMLInputElement | null
+    readonly saveButtonElement: HTMLInputElement | null
+    readonly cancelButtonElement: HTMLInputElement | null
 
-    constructor(openNewRoute) {
+    constructor(openNewRoute:OpenNewRouteFunction) {
         this.openNewRoute = openNewRoute;
         this.categoryElement = null
         this.typeCategoryName = null
@@ -25,10 +28,12 @@ export class CreateIncomeBalancing {
         this.sumSelectElement = document.getElementById('sumInput') as HTMLInputElement;
         this.dateSelectElement = document.getElementById('dateInput') as HTMLInputElement;
         this.commentSelectElement = document.getElementById('commentInput') as HTMLInputElement;
+        this.saveButtonElement = document.getElementById('saveButton') as HTMLInputElement
+        this.cancelButtonElement = document.getElementById('cancelButton') as HTMLInputElement
 
 
-        document.getElementById('saveButton').addEventListener('click', this.saveIncome.bind(this))
-        document.getElementById('cancelButton').addEventListener('click', this.cancelIncome.bind(this))
+        this.saveButtonElement.addEventListener('click', this.saveIncome.bind(this))
+        this.cancelButtonElement.addEventListener('click', this.cancelIncome.bind(this))
 
         this.showCategory().then()
     }
@@ -47,7 +52,7 @@ export class CreateIncomeBalancing {
         }
 
         if (this.sumSelectElement) {
-            if (this.sumSelectElement.value && this.sumSelectElement.value > 0) {
+            if (this.sumSelectElement.value && parseInt(this.sumSelectElement.value) > 0) {
                 this.sumSelectElement.classList.remove('is-invalid')
             } else {
                 this.sumSelectElement.classList.add('is-invalid')
@@ -77,10 +82,10 @@ export class CreateIncomeBalancing {
     }
 
     private async showCategory(): Promise<void> {
-        const result: CategoriesIncomeType | DefaultResponseType = await HttpUtils.request('/categories/income');
-        (result as CategoriesIncomeType).response.forEach((incomeCategory): void => {
+        const result: CategoriesIncomeType[] | DefaultResponseType = await HttpUtils.request('/categories/income');
+        (result as CategoriesIncomeType[]).forEach((incomeCategory): void => {
             this.categoryElement = document.createElement('option');
-            this.categoryElement.value = incomeCategory.id;
+            this.categoryElement.value = incomeCategory.id.toString();
             this.categoryElement.innerText = incomeCategory.title;
             if(this.categorySelectElement){
                 this.categorySelectElement.appendChild(this.categoryElement);
@@ -102,7 +107,7 @@ export class CreateIncomeBalancing {
     }
 
 
-    private async saveIncome(e): Promise<void> {
+    private async saveIncome(e: Event): Promise<void> {
         e.preventDefault()
         if (this.validateField()) {
             if(this.typeCategoryName && this.sumSelectElement && this.dateSelectElement && this.commentSelectElement && this.categorySelectElement){
@@ -117,7 +122,7 @@ export class CreateIncomeBalancing {
 
                 const result:BalancingType | DefaultResponseType = await HttpUtils.request('/operations', 'POST', true, createData)
 
-                if ((result as DefaultResponseType).error || !((result as BalancingType).response || (result as BalancingType).response)) {
+                if ((result as DefaultResponseType).error || !(result as BalancingType)) {
                     alert('Что-то пошло не так')
                     return
                 }
@@ -131,7 +136,7 @@ export class CreateIncomeBalancing {
 
     }
 
-    private async cancelIncome(e): Promise<void> {
+    private async cancelIncome(e: Event): Promise<void> {
         e.preventDefault()
         await this.openNewRoute('/balancing')
     }

@@ -1,10 +1,11 @@
 import {HttpUtils} from "../utils/http-utils";
 import {BalanceResponseType} from "../types/balance-response.type";
 import {DefaultResponseType} from "../types/default-response.type";
+import {OpenNewRouteFunction} from "../types/open-new-route.type";
 
 
 export class Layout {
-    readonly openNewRoute: (url: string | null) => Promise<void>
+    readonly openNewRoute: OpenNewRouteFunction
     readonly burgerTabElement: HTMLElement | null
     readonly burgerMenuElement: HTMLElement | null
     readonly burgerElement: HTMLElement | null
@@ -14,7 +15,7 @@ export class Layout {
     readonly balanceInputElement: HTMLInputElement | null
     readonly saveBalanceButtonElement: HTMLElement | null
 
-    constructor(openNewRoute) {
+    constructor(openNewRoute:OpenNewRouteFunction) {
         this.openNewRoute = openNewRoute;
         this.burgerTabElement = document.getElementById('burgerTab')
         this.burgerMenuElement = document.getElementById('burgerMenu')
@@ -61,13 +62,13 @@ export class Layout {
     private async getBalance(): Promise<void> {
         const result: BalanceResponseType | DefaultResponseType = await HttpUtils.request('/balance')
         if ((result as DefaultResponseType).redirect) {
-            await this.openNewRoute((result as DefaultResponseType).redirect);
+            await this.openNewRoute('/login');
         }
-        if ((result as DefaultResponseType).error !== undefined) {
-            return
+        if ((result as DefaultResponseType).error) {
+            console.log((result as DefaultResponseType).error)
         }
         if (this.balanceElement) {
-            this.balanceElement.innerText = ' ' + (result as BalanceResponseType).response.balance + ' $'
+            this.balanceElement.innerText = ' ' + (result as BalanceResponseType).balance + ' $'
 
         }
     }
@@ -75,12 +76,12 @@ export class Layout {
     private async saveBalance(): Promise<void> {
         if (this.balanceInputElement) {
             const result: BalanceResponseType | DefaultResponseType = await HttpUtils.request('/balance', 'PUT', true, {newBalance: this.balanceInputElement.value})
-            if ((result as DefaultResponseType).error !== undefined) {
-                return
+            if ((result as DefaultResponseType).error) {
+                console.log((result as DefaultResponseType).error)
             }
 
             if (this.balanceElement) {
-                this.balanceElement.innerText = ' ' + (result as BalanceResponseType).response.balance + ' $'
+                this.balanceElement.innerText = ' ' + (result as BalanceResponseType).balance + ' $'
 
             }
         }

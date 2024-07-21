@@ -5,19 +5,22 @@ import {SignUpResponseType} from "../../types/sign-up-response.type";
 import {SignUpErrorType} from "../../types/sign-up-error.type";
 import {LoginResponseType} from "../../types/login-response.type";
 import {DefaultResponseType} from "../../types/default-response.type";
+import {OpenNewRouteFunction} from "../../types/open-new-route.type";
+import {validateSignUpForm} from "../../utils/valid-utils";
 
 export class SignUp {
-    readonly openNewRoute: (url: string | null) => Promise<void>
+    readonly openNewRoute: OpenNewRouteFunction
     readonly userNameElement: HTMLInputElement | null
-    readonly emailElement: HTMLInputElement | null
-    readonly passwordElement: HTMLInputElement | null
-    readonly passwordRepeatElement: HTMLInputElement | null
+    readonly emailElement: HTMLInputElement
+    readonly passwordElement: HTMLInputElement
+    readonly passwordRepeatElement: HTMLInputElement
+    readonly processButtonElement: HTMLInputElement
 
-    constructor(openNewRoute) {
+    constructor(openNewRoute: OpenNewRouteFunction) {
         this.openNewRoute = openNewRoute;
 
         if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
-            return this.openNewRoute('/');
+            this.openNewRoute('/').then();
         }
 
 
@@ -29,48 +32,15 @@ export class SignUp {
 
         PasswordEye.passwordEye()
 
+        this.processButtonElement = document.getElementById('process-button') as HTMLInputElement;
+        if(this.processButtonElement){
+            this.processButtonElement.addEventListener('click', this.signUp.bind(this));
 
-        document.getElementById('process-button').addEventListener('click', this.signUp.bind(this));
+        }
     }
 
     private validateForm(): boolean {
-        let isValid: boolean = true
-
-        if (this.userNameElement) {
-            if (this.userNameElement.value && this.userNameElement.value.match(/^(?:[А-Я][а-я]{2,}(?: [А-Я][а-я]*)*)$/)) {
-                this.userNameElement.classList.remove('is-invalid');
-            } else {
-                this.userNameElement.classList.add('is-invalid');
-                isValid = false;
-            }
-        }
-        if (this.emailElement) {
-            if (this.emailElement.value && this.emailElement.value.match(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-                this.emailElement.classList.remove('is-invalid')
-            } else {
-                this.emailElement.classList.add('is-invalid')
-                isValid = false
-            }
-        }
-
-        if (this.passwordElement) {
-            if (this.passwordElement.value && this.passwordElement.value.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)) { // Not fact
-                this.passwordElement.classList.remove('is-invalid')
-            } else {
-                this.passwordElement.classList.add('is-invalid')
-                isValid = false
-            }
-        }
-        if (this.passwordRepeatElement && this.passwordElement) {
-            if (this.passwordRepeatElement.value && this.passwordElement.value === this.passwordRepeatElement.value) {
-                this.passwordRepeatElement.classList.remove('is-invalid')
-            } else {
-                this.passwordRepeatElement.classList.add('is-invalid')
-                isValid = false
-            }
-
-        }
-        return isValid;
+        return validateSignUpForm(this.userNameElement, this.emailElement, this.passwordElement, this.passwordRepeatElement)
     }
 
     private async signUp(): Promise<void> {
@@ -85,20 +55,20 @@ export class SignUp {
                     passwordRepeat: this.passwordRepeatElement.value
                 })
 
-                if ((result as SignUpErrorType).error || !(result as SignUpResponseType).response || ((result as SignUpResponseType).response && (!(result as SignUpResponseType).response.user.id || !(result as SignUpResponseType).response.user.email || !(result as SignUpResponseType).response.user.name || !(result as SignUpResponseType).response.user.lastName))) {
+                if ((result as SignUpErrorType).error || !(result as SignUpResponseType) || ((result as SignUpResponseType) && (!(result as SignUpResponseType).user.id || !(result as SignUpResponseType).user.email || !(result as SignUpResponseType).user.name || !(result as SignUpResponseType).user.lastName))) {
                     return
                 }
 
-                if ((result as SignUpResponseType).response) {
+                if ((result as SignUpResponseType)) {
                     const req: LoginResponseType | DefaultResponseType = await HttpUtils.request('/login', 'POST', false, {
                         email: this.emailElement.value,
                         password: this.passwordElement.value,
                         rememberMe: true
                     })
-                    AuthUtils.setAuthInfo((req as LoginResponseType).response.tokens.accessToken, (req as LoginResponseType).response.tokens.refreshToken, {
-                        id: (req as LoginResponseType).response.user.id,
-                        name: (result as SignUpResponseType).response.user.name,
-                        lastName: (req as LoginResponseType).response.user.lastName
+                    AuthUtils.setAuthInfo((req as LoginResponseType).tokens.accessToken, (req as LoginResponseType).tokens.refreshToken, {
+                        id: (req as LoginResponseType).user.id,
+                        name: (result as SignUpResponseType).user.name,
+                        lastName: (req as LoginResponseType).user.lastName
                     })
 
                 }

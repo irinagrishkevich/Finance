@@ -1,13 +1,14 @@
 import {HttpUtils} from "../../utils/http-utils";
 import {CategoriesIncomeType} from "../../types/categories-income.type";
 import {DefaultResponseType} from "../../types/default-response.type";
+import {OpenNewRouteFunction} from "../../types/open-new-route.type";
 
 export class ExpenseCreate{
-    readonly openNewRoute: (url: string | null) => Promise<void>
+    readonly openNewRoute: OpenNewRouteFunction
     readonly createExpense: HTMLInputElement | null
     readonly cancelExpense: HTMLInputElement | null
     readonly nameExpense: HTMLInputElement | null
-    constructor(openNewRoute) {
+    constructor(openNewRoute:OpenNewRouteFunction) {
         this.openNewRoute = openNewRoute
 
         this.createExpense = document.getElementById('createExpense') as HTMLInputElement
@@ -25,10 +26,10 @@ export class ExpenseCreate{
                     title: this.nameExpense.value
                 })
                 if ((result as DefaultResponseType).redirect) {
-                    return this.openNewRoute((result as DefaultResponseType).redirect)
+                    return this.openNewRoute('/login')
                 }
 
-                if ((result as DefaultResponseType).error || !(result as CategoriesIncomeType).response || ((result as CategoriesIncomeType).response)) {
+                if ((result as DefaultResponseType).error || !(result as CategoriesIncomeType)) {
                     // console.log(result.response.error)
                     console.log((result as DefaultResponseType).error)
                     console.log('Ошибка при создании категории дохода')
@@ -41,7 +42,7 @@ export class ExpenseCreate{
             }
         }
     }
-    private async cancelExpenseClick(e): Promise<void> {
+    private async cancelExpenseClick(e: Event): Promise<void> {
         e.preventDefault()
         await this.openNewRoute('/expense')
     }

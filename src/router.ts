@@ -28,12 +28,14 @@ export class Router {
     readonly titleElement: HTMLElement | null;
     readonly contentPageElement: HTMLElement | null;
     private profileNameElement: HTMLElement | null;
-    private userName: string;
-    private routes: RouteType[]
+    private userName: string | null;
+    private routes: RouteType[] = []
 
     constructor() {
         this.titleElement = document.getElementById('title')
         this.contentPageElement = document.getElementById('content')
+        this.profileNameElement = null
+        this.userName = null
 
         this.initEvents()
 
@@ -46,7 +48,7 @@ export class Router {
                 styles: '/style/style.css',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                    new Main()
+                    new Main(this.openNewRoute.bind(this))
 
                 },
                 scripts: ['chart.umd.js']
@@ -56,7 +58,7 @@ export class Router {
                 title: 'Вход в систему',
                 template: '/templates/auth/login.html',
                 styles: '/style/style.css',
-                useLayout: false,
+                // useLayout: false,
                 load: () => {
                     new Login(this.openNewRoute.bind(this))
                     new PasswordEye()
@@ -67,7 +69,7 @@ export class Router {
                 title: 'Регистрация',
                 template: '/templates/auth/sign-up.html',
                 styles: '/style/style.css',
-                useLayout: false,
+                // useLayout: false,
                 load: () => {
                     new SignUp(this.openNewRoute.bind(this))
                 }
@@ -205,31 +207,34 @@ export class Router {
                 load: () => {
                     new DeleteBalancingOperation(this.openNewRoute.bind(this))
                 }
-            },
+            }
         ]
     }
 
     private initEvents(): void {
-        window.addEventListener('DOMContentLoaded', this.activateRoute.bind(this))
-        window.addEventListener('popstate', this.activateRoute.bind(this))
 
         document.addEventListener('click', this.clickHandler.bind(this));
 
     }
 
 
-    public async openNewRoute(url): Promise<void> {
-        const currentRoute: string | null = window.location.pathname
-        history.pushState({}, '', url)
-        await this.activateRoute(null, currentRoute)
+    public async openNewRoute(url: string | null): Promise<void> {
+        if (url) {
+            const currentRoute: string = window.location.pathname
+            history.pushState({}, '', url)
+            await this.activateRoute(null, currentRoute)
+        }
     }
 
-    private async clickHandler(e): Promise<void> {
+    public async clickHandler(e: Event | null): Promise<void> {
+        if (!e) return
         let element: HTMLAnchorElement | null = null
-        if (e.target.nodeName === 'A') {
-            element = e.target
-        } else if (e.target.parentNode.nodeName === 'A') {
-            element = e.target.parentNode
+
+        const target: HTMLElement = e.target as HTMLElement
+        if (target.nodeName === 'A') {
+            element = target as HTMLAnchorElement
+        } else if (target.parentNode && (target.parentNode as HTMLElement).nodeName === 'A') {
+            element = target.parentNode as HTMLAnchorElement
         }
         if (element) {
             e.preventDefault()
@@ -245,14 +250,18 @@ export class Router {
 
     }
 
-    private async activateRoute(e, oldRoute = null): Promise<void> {
+    private async activateRoute(e: Event | null, oldRoute: string | null = null): Promise<void> {
         if (oldRoute) {
             const currentRoute: RouteType | undefined = this.routes.find(item => item.route === oldRoute)
-            if (currentRoute !== undefined) {
-                if (currentRoute.scripts && currentRoute.scripts.length > 0) {
-                    currentRoute.scripts.forEach(script => {
-                        document.querySelector(`script[src='/js/${script}']`).remove()
+            if (currentRoute !== undefined && currentRoute.scripts) {
+                if ((currentRoute as RouteType).scripts && currentRoute.scripts.length > 0) {
+                    currentRoute.scripts.forEach((script: string): void => {
+                        const scriptElement: HTMLScriptElement | null = document.querySelector(`script[src='/js/${script}']`)
+                        if (scriptElement) {
+                            scriptElement.remove()
+                        }
                     })
+
                 }
             }
         }
@@ -279,29 +288,35 @@ export class Router {
                         contentBlock = document.getElementById('content-layout')
                         new Layout(this.openNewRoute.bind(this))
                         this.profileNameElement = document.getElementById('profileName')
-                        if (!this.userName) {
-                            let userInfoString: String | null  = AuthUtils.getAuthInfo(AuthUtils.userInfoKey) as String | null
-                            let userInfo: UserInfo | null  = null
+                        console.log(this.userName)
+                        console.log(!this.userName)
+                        if (!this.userName || AuthUtils.getAuthInfo(AuthUtils.userInfoKey)) {
+
+                            let userInfoString: string = AuthUtils.getAuthInfo(AuthUtils.userInfoKey) as string
+                            let userInfo: UserInfo | null = null
 
                             if (userInfoString) {
                                 userInfo = JSON.parse(userInfoString) as UserInfo
                                 if (userInfo && userInfo.name) {
-                                    if(this.userName){
-                                        this.userName = `${userInfo.name} ${userInfo.lastName}`
-                                    }
+                                    this.userName = `${userInfo.name} ${userInfo.lastName}`
                                 }
                             } else {
                                 console.log('no user info')
 
                             }
+                            console.log(this.userName)
+                            if (this.profileNameElement && this.userName) {
+                                console.log(this.userName)
+                                this.profileNameElement.innerText = this.userName
+                            }
+
                         }
-                        if (this.profileNameElement) {
-                            this.profileNameElement.innerText = this.userName
-                        }
+
+
                         this.activateMenuItem(newRoute)
                     }
                 }
-                if(contentBlock){
+                if (contentBlock) {
                     contentBlock.innerHTML = await fetch(newRoute.template).then(response => response.text())
                 }
             }
@@ -318,13 +333,15 @@ export class Router {
     }
 
     private activateMenuItem(route: RouteType): void {
-        let menuLinks: NodeListOf<Element> | null = document.querySelectorAll('.nav-link')
+        let menuLinks: NodeListOf<Element> = document.querySelectorAll('.nav-link')
         menuLinks.forEach(item => {
-            const href: string = item.getAttribute('href');
-            if ((route.route.includes(href) && href !== '/') || route.route === '/' && href === '/') {
-                item.classList.add('active', 'text-white');
-            } else {
-                item.classList.remove('active', 'text-white');
+            const href: string | null = item.getAttribute('href');
+            if (href) {
+                if ((route.route.includes(href) && href !== '/') || route.route === '/' && href === '/') {
+                    item.classList.add('active', 'text-white');
+                } else {
+                    item.classList.remove('active', 'text-white');
+                }
             }
         });
 
@@ -338,22 +355,25 @@ export class Router {
         }
         if (route.route.includes('/income') || route.route.includes('/expense')) {
             submenu.classList.add('show')
-            if(categoryLink){
+            if (categoryLink) {
                 categoryLink.classList.add('active', 'text-white')
             }
-            let submenuLinks: NodeListOf<Element> | null = document.querySelectorAll('#submenu1 .nav-link')
+            let submenuLinks: NodeListOf<Element> = document.querySelectorAll('#submenu1 .nav-link')
             if (submenuLinks) {
                 submenuLinks.forEach(subItem => {
-                    const subHref: string = subItem.getAttribute('href');
-                    if (route.route.includes(subHref)) {
-                        subItem.classList.add('active', 'text-white');
-                    } else {
-                        subItem.classList.remove('active', 'text-white');
+                    const subHref: string | null = subItem.getAttribute('href');
+                    if (subHref) {
+                        if (route.route.includes(subHref)) {
+                            subItem.classList.add('active', 'text-white');
+                        } else {
+                            subItem.classList.remove('active', 'text-white');
+                        }
+
                     }
                 });
             }
         } else {
-            if(categoryLink){
+            if (categoryLink) {
                 categoryLink.classList.remove('active', 'text-white');
             }
             submenu.classList.remove('show');

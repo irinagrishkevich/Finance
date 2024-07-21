@@ -1,13 +1,14 @@
 import {HttpUtils} from "../../utils/http-utils";
 import {CategoriesIncomeType} from "../../types/categories-income.type";
 import {DefaultResponseType} from "../../types/default-response.type";
-import {BalancingDataType, BalancingType} from "../../types/balancing.type";
+import {BalancingType} from "../../types/balancing.type";
 import {CreateDataType} from "../../types/create-data.type";
+import {OpenNewRouteFunction} from "../../types/open-new-route.type";
 
 
 export class EditExpenseBalancing {
-    readonly openNewRoute: (url: string | null) => Promise<void>
-    private tableId: number | null
+    readonly openNewRoute: OpenNewRouteFunction
+
     private typeCategoryName: string | null
     readonly sumInputElement: HTMLInputElement | null
     readonly dateInputElement: HTMLInputElement | null
@@ -17,19 +18,18 @@ export class EditExpenseBalancing {
     readonly saveIncome: HTMLInputElement | null
     readonly cancelIncome: HTMLInputElement | null
     private categoryElement: HTMLOptionElement | null
-    private operationData: BalancingDataType | undefined
+    private operationData: BalancingType | null
 
-    constructor(openNewRoute) {
+    constructor(openNewRoute:OpenNewRouteFunction) {
         this.openNewRoute = openNewRoute
-        this.tableId = null
+
         this.typeCategoryName = null
         this.categoryElement = null
+        this.operationData = null
 
         const urlParams: URLSearchParams = new URLSearchParams(window.location.search)
         const id: string | null = urlParams.get('id')
-        if (!id) {
-            return this.openNewRoute('/')
-        }
+
 
         this.typeSelectElement = document.getElementById('typeSelect') as HTMLSelectElement;
         this.categorySelectElement = document.getElementById('categorySelect') as HTMLInputElement;
@@ -44,14 +44,19 @@ export class EditExpenseBalancing {
         this.saveIncome.addEventListener('click', this.saveIncomeClick.bind(this))
         this.cancelIncome.addEventListener('click', this.cancelIncomeClick.bind(this))
 
-        this.getOperation(id).then()
+        if (id) {
+            this.getOperation(id).then()
+        }else {
+            this.openNewRoute('/').then()
+        }
+
     }
 
     private async showCategory(): Promise<void> {
-        const result: CategoriesIncomeType | DefaultResponseType = await HttpUtils.request('/categories/expense');
-        (result as CategoriesIncomeType).response.forEach((incomeCategory): void => {
+        const result: CategoriesIncomeType[] | DefaultResponseType = await HttpUtils.request('/categories/expense');
+        (result as CategoriesIncomeType[]).forEach((incomeCategory): void => {
             this.categoryElement = document.createElement('option');
-            this.categoryElement.value = incomeCategory.id;
+            this.categoryElement.value = incomeCategory.id.toString();
             this.categoryElement.innerText = incomeCategory.title;
             if (this.categorySelectElement) {
                 this.categorySelectElement.appendChild(this.categoryElement);
@@ -60,17 +65,17 @@ export class EditExpenseBalancing {
         })
     }
 
-    private async getOperation(id): Promise<void> {
+    private async getOperation(id: string): Promise<void> {
         const result: DefaultResponseType | BalancingType = await HttpUtils.request('/operations/' + id)
         if ((result as DefaultResponseType).redirect) {
-            return this.openNewRoute((result as DefaultResponseType).redirect)
+            return this.openNewRoute('/login')
         }
-        if ((result as DefaultResponseType).error || !((result as BalancingType).response || (result as BalancingType).response)) {
+        if ((result as DefaultResponseType).error || !(result as BalancingType)) {
             console.log("Ошибка при запросе категории дохода")
             return
         }
 
-        this.operationData = (result as BalancingType).response
+        this.operationData = (result as BalancingType)
         // console.log(result.response)
         this.showOperation()
 
@@ -92,9 +97,6 @@ export class EditExpenseBalancing {
             if (this.commentInputElement) {
                 this.commentInputElement.value = this.operationData.comment
             }
-            if (this.tableId) {
-                this.tableId = this.operationData.id
-            }
             if (this.typeSelectElement) {
                 this.typeSelectElement.addEventListener('change', async (e: Event) => {
                     if ((e.target as HTMLSelectElement).value === '2') {
@@ -102,10 +104,10 @@ export class EditExpenseBalancing {
                             if (this.categorySelectElement) {
                                 this.categorySelectElement.innerHTML = ''
                             }
-                            const result: CategoriesIncomeType | DefaultResponseType = await HttpUtils.request('/categories/income');
-                            (result as CategoriesIncomeType).response.forEach((incomeCategory): void => {
+                            const result: CategoriesIncomeType[] | DefaultResponseType = await HttpUtils.request('/categories/income');
+                            (result as CategoriesIncomeType[]).forEach((incomeCategory): void => {
                                 this.categoryElement = document.createElement('option');
-                                this.categoryElement.value = incomeCategory.id;
+                                this.categoryElement.value = incomeCategory.id.toString();
                                 this.categoryElement.innerText = incomeCategory.title;
                                 if (this.categorySelectElement) {
                                     this.categorySelectElement.appendChild(this.categoryElement);
@@ -123,10 +125,10 @@ export class EditExpenseBalancing {
 
     }
 
-    private validateField(): boolean {
+    private validateField():boolean {
         let isValid: boolean = true
         if (this.sumInputElement) {
-            if (this.sumInputElement.value && this.sumInputElement.value > 0) {
+            if (this.sumInputElement.value && parseInt(this.sumInputElement.value) > 0) {
                 this.sumInputElement.classList.remove('is-invalid')
             } else {
                 this.sumInputElement.classList.add('is-invalid')
@@ -141,6 +143,7 @@ export class EditExpenseBalancing {
                 this.dateInputElement.classList.add('is-invalid')
                 isValid = false
             }
+        }
             if (this.commentInputElement) {
                 if (this.commentInputElement.value) {
                     this.commentInputElement.classList.remove('is-invalid')
@@ -150,11 +153,12 @@ export class EditExpenseBalancing {
                 }
 
             }
+
             return isValid
-        }
+
     }
 
-    private async saveIncomeClick(e): Promise<void> {
+    private async saveIncomeClick(e: Event): Promise<void> {
         e.preventDefault()// add
         if (this.validateField()) {
             if(this.typeCategoryName && this.sumInputElement && this.dateInputElement && this.commentInputElement && this.categorySelectElement){
@@ -165,13 +169,13 @@ export class EditExpenseBalancing {
                     comment: this.commentInputElement.value,
                     category_id: parseInt(this.categorySelectElement.value)
                 }
-                if (changedData) {
-                    const result: BalancingType | DefaultResponseType = await HttpUtils.request('/operations/' + this.tableId, 'PUT', true, changedData)
+                if (changedData && this.operationData) {
+                    const result: BalancingType | DefaultResponseType = await HttpUtils.request('/operations/' + this.operationData.id, 'PUT', true, changedData)
                     if ((result as DefaultResponseType).redirect) {
-                        return this.openNewRoute((result as DefaultResponseType).redirect)
+                        return this.openNewRoute('/login')
                     }
 
-                    if ((result as DefaultResponseType).error || !((result as BalancingType).response || (result as BalancingType).response)) {
+                    if ((result as DefaultResponseType).error || !(result as BalancingType)) {
                         console.log((result as DefaultResponseType).error)
                         return alert('Ошибка при редактировании категории дохода')
                     }

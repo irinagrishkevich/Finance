@@ -1,13 +1,14 @@
 import {HttpUtils} from "../../utils/http-utils";
 import {CategoriesIncomeType} from "../../types/categories-income.type";
 import {DefaultResponseType} from "../../types/default-response.type";
+import {OpenNewRouteFunction} from "../../types/open-new-route.type";
 
 export class IncomeCreate{
-    readonly openNewRoute: (url: string | null) => Promise<void>
+    readonly openNewRoute: OpenNewRouteFunction
     readonly createIncome: HTMLInputElement | null
     readonly cancelIncome: HTMLInputElement | null
     readonly nameIncome: HTMLInputElement | null
-    constructor(openNewRoute) {
+    constructor(openNewRoute: OpenNewRouteFunction) {
         this.openNewRoute = openNewRoute
 
         this.createIncome = document.getElementById('createIncome') as HTMLInputElement
@@ -24,10 +25,10 @@ export class IncomeCreate{
                 title: this.nameIncome.value
             })
             if ((result as DefaultResponseType).redirect) {
-                return this.openNewRoute((result as DefaultResponseType).redirect)
+                return this.openNewRoute('/login')
             }
 
-            if ((result as DefaultResponseType).error || !((result as CategoriesIncomeType).response || (result as CategoriesIncomeType).response)) {
+            if ((result as DefaultResponseType).error || !(result as CategoriesIncomeType)) {
                 console.log("Ошибка при создании категории дохода")
                 return
             }
@@ -37,7 +38,7 @@ export class IncomeCreate{
             alert('Введите название дохода')
         }
     }
-    private async cancelIncomeClick(e): Promise<void> {
+    private async cancelIncomeClick(e: Event): Promise<void> {
         e.preventDefault()
         await this.openNewRoute('/income')
     }

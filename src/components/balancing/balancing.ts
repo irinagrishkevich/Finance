@@ -2,22 +2,23 @@ import {HttpUtils} from "../../utils/http-utils";
 import config from "../../config/config";
 import {BalancingType} from "../../types/balancing.type";
 import {DefaultResponseType} from "../../types/default-response.type";
+import {OpenNewRouteFunction} from "../../types/open-new-route.type";
 
 export class Balancing {
-    readonly openNewRoute: (url: string | null) => Promise<void>
+    readonly openNewRoute: OpenNewRouteFunction
     readonly balancingRowElements: HTMLElement | null
     readonly filterButtons: NodeListOf<HTMLButtonElement> | null
     readonly startDateElement: HTMLInputElement | null
     readonly endDateElement: HTMLInputElement | null
-    readonly intervalButtonElement: HTMLButtonElement | null
+    readonly intervalButtonElement: HTMLInputElement
 
-    constructor(openNewRoute) {
+    constructor(openNewRoute: OpenNewRouteFunction) {
         this.openNewRoute = openNewRoute;
         this.balancingRowElements = document.getElementById('balancing-row');
         this.filterButtons = document.querySelectorAll('.btn-outline-secondary');
         this.startDateElement = document.getElementById('start-date') as HTMLInputElement;
         this.endDateElement = document.getElementById('end-date') as HTMLInputElement;
-        this.intervalButtonElement = document.getElementById('interval-button') as HTMLButtonElement;
+        this.intervalButtonElement = document.getElementById('interval-button') as HTMLInputElement;
 
         this.addFilterEventListener()
         this.loadBalancingTable('today', null, null).then();
@@ -27,13 +28,13 @@ export class Balancing {
         if (this.filterButtons) {
             this.filterButtons.forEach(button => {
                 button.addEventListener('click', async (event: MouseEvent): Promise<void> => {
-                    this.activateButton(event.target)
+                    this.activateButton((event.target as HTMLElement) as HTMLInputElement)
 
                     const filter: string = (event.target as HTMLElement).textContent?.toLowerCase() || '';
-                    const period: string | undefined = Object.keys(config.filterMapping).find(key => config.filterMapping[key] === filter)
+                    const period: string | undefined = Object.keys(config.filterMapping).find((key: string): boolean => config.filterMapping[key] === filter)
 
                     if (filter !== 'interval') {
-                        await this.loadBalancingTable(period, null, null); //? because !== 'interval'
+                        await this.loadBalancingTable((period as string), null, null); //? because !== 'interval'
                     }
                 })
             })
@@ -68,9 +69,9 @@ export class Balancing {
 
     }
 
-    private activateButton(button): void {
+    private activateButton(button: HTMLInputElement): void {
         if (this.filterButtons) {
-            this.filterButtons.forEach(btn => {
+            this.filterButtons.forEach((btn: HTMLButtonElement): void => {
                 btn.classList.remove('active')
             })
             button.classList.add('active')
@@ -81,17 +82,17 @@ export class Balancing {
         this.activateButton(this.intervalButtonElement)
     }
 
-    private async loadBalancingTable(period, startDate, endDate): Promise<void> {
+    private async loadBalancingTable(period: string | null, startDate: string | null, endDate: string | null): Promise<void> {
 
         let url: string = `/operations?period=${period}`
         if (period === 'interval') {
             url += `&dateFrom=${startDate}&dateTo=${endDate}`
         }
-        const balancingAll: BalancingType | DefaultResponseType = await HttpUtils.request(url);
+        const balancingAll: BalancingType[] | DefaultResponseType = await HttpUtils.request(url);
         if ((balancingAll as DefaultResponseType).redirect) {
-            return this.openNewRoute((balancingAll as DefaultResponseType).redirect)
+            return this.openNewRoute('/login')
         }
-        if ((balancingAll as DefaultResponseType).error || !((balancingAll as BalancingType).response || (balancingAll as BalancingType).response)) {
+        if ((balancingAll as DefaultResponseType).error || !(balancingAll as BalancingType[])) {
             console.log("Ошибка при запросе данных все расходов и доходов")
             return
         }
@@ -99,7 +100,7 @@ export class Balancing {
             this.balancingRowElements.innerHTML = ''
         }
 
-        (balancingAll as BalancingType).response.forEach((balancing, index: number) => {
+        (balancingAll as BalancingType[]).forEach((balancing, index: number) => {
             const row: HTMLTableRowElement = document.createElement('tr');
             const numberCell: HTMLTableCellElement = document.createElement('td');
             numberCell.textContent = Number(index + 1).toString();
@@ -139,24 +140,36 @@ export class Balancing {
         const editButtons: NodeListOf<HTMLAnchorElement> | null = document.querySelectorAll('#editCategory');
         editButtons.forEach((button: HTMLAnchorElement) => {
             button.addEventListener('click', async (event: MouseEvent): Promise<void> => {
-                const id:string = (event.target as HTMLAnchorElement).closest('a').getAttribute('data-id');
-                const type: string = (event.target as HTMLAnchorElement).closest('a').getAttribute('data-type');
+                const targetElement = (event.target as HTMLElement).closest('a') as HTMLAnchorElement;
 
-                if (type === 'income') {
-                    await this.openNewRoute(`/balancing/edit-income?id=${id}`);
-                } else {
-                    await this.openNewRoute(`/balancing/edit-expense?id=${id}`);
+                if (targetElement) {
+                    const id: string = targetElement.getAttribute('data-id') as string;
+                    const type: string = targetElement.getAttribute('data-type') as string;
+                    if (id && type) {
+                        if (type === 'income') {
+                            await this.openNewRoute(`/balancing/edit-income?id=${id}`);
+                        } else {
+                            await this.openNewRoute(`/balancing/edit-expense?id=${id}`);
+                        }
+                    }
                 }
+
             });
         });
     }
 
     private addDeleteEventListeners(): void {
         const deleteButtons: NodeListOf<HTMLAnchorElement> | null = document.querySelectorAll('#deleteCategory');
-            deleteButtons.forEach((button: HTMLAnchorElement) => {
+        deleteButtons.forEach((button: HTMLAnchorElement) => {
             button.addEventListener('click', async (event: MouseEvent): Promise<void> => {
-                const id:string = (event.target as HTMLAnchorElement).closest('a').getAttribute('data-id');
-                await this.openNewRoute(`/balancing/delete?id=${id}`);
+                const targetElement = (event.target as HTMLElement).closest('a') as HTMLAnchorElement | null;
+                if (!targetElement) {
+                    return
+                }
+                const id: string = targetElement.getAttribute('data-id') as string ;
+                if (id) {
+                    await this.openNewRoute(`/balancing/delete?id=${id}`);
+                }
             });
         });
 

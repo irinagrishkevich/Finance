@@ -1,12 +1,13 @@
 import {HttpUtils} from "../../utils/http-utils";
 import {CategoriesIncomeType} from "../../types/categories-income.type";
 import {DefaultResponseType} from "../../types/default-response.type";
+import {OpenNewRouteFunction} from "../../types/open-new-route.type";
 
 export class Expense {
-    readonly openNewRoute: (url: string | null) => Promise<void>
+    readonly openNewRoute: OpenNewRouteFunction
     readonly expenseCategoriesElement: HTMLElement | null
 
-    constructor(openNewRoute) {
+    constructor(openNewRoute:OpenNewRouteFunction) {
         this.openNewRoute = openNewRoute;
 
         this.expenseCategoriesElement = document.getElementById('expense-categories')
@@ -15,11 +16,11 @@ export class Expense {
     }
 
     private async loadExpenseCategories(): Promise<void> {
-        const expenseCategories: CategoriesIncomeType | DefaultResponseType = await HttpUtils.request('/categories/expense')
+        const expenseCategories: CategoriesIncomeType[] | DefaultResponseType = await HttpUtils.request('/categories/expense')
         if (this.expenseCategoriesElement) {
             this.expenseCategoriesElement.innerHTML = ''
         }
-        (expenseCategories as CategoriesIncomeType).response.forEach(expenseCategory => {
+        (expenseCategories as CategoriesIncomeType[]).forEach(expenseCategory => {
 
             const expenseCategoryElement: HTMLElement = document.createElement('div')
             expenseCategoryElement.classList.add('border', 'border-light-subtle', 'rounded-3', 'p-3')

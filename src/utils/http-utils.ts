@@ -25,21 +25,19 @@ export class HttpUtils{ // error
         if (body){
             params.body = JSON.stringify(body)
         }
-        const response : Response = await fetch(config.host + url, params);
-        // try {
-        //     response = await fetch(config.host + url, params)
-        //     const result
-        //     result.response = await response.json()
-        // } catch (e){
-        //     result.error = true
-        //     return  result
-        // }
+        let response : Response
+        try {
+            response = await fetch(config.host + url, params)
+        } catch (e){
+            console.log(e)
+            throw new Error('Ошибка при запросе к серверу')
+        }
         if (response.status < 200 || response.status >= 300) {
             if (useAuth && response.status === 401){
                 const result: DefaultResponseType | Response = await this.request(url, method, useAuth, body)
                 if (!token){
                     // 1 токена нет
-                    (result as DefaultResponseType).redirect
+                    (result as DefaultResponseType).redirect = '/login'
                 } else {
                     // 2 токена устарел/невалидный (надо обновить)
                     const updatedTokenResult: boolean = await AuthUtils.updateRefreshToken()
@@ -48,7 +46,7 @@ export class HttpUtils{ // error
                         // запрос повторно
                         return this.request(url, method, useAuth, body)
                     }else {
-                        (result as DefaultResponseType).redirect
+                        (result as DefaultResponseType).redirect = '/login'
                     }
 
 

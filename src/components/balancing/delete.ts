@@ -1,11 +1,12 @@
 import {HttpUtils} from "../../utils/http-utils";
 import {DefaultResponseType} from "../../types/default-response.type";
+import {OpenNewRouteFunction} from "../../types/open-new-route.type";
 
 export class DeleteBalancingOperation {
-    readonly openNewRoute: (url: string) => void;
+    readonly openNewRoute: OpenNewRouteFunction;
     private deleteBalancingCategoryBtn: HTMLInputElement | null;
     private cancelDeleteCategoryBtn: HTMLInputElement | null;
-    constructor(openNewRoute) {
+    constructor(openNewRoute:OpenNewRouteFunction) {
         this.openNewRoute = openNewRoute
 
         this.deleteBalancingCategoryBtn = document.getElementById('deleteIncomeBtn') as HTMLInputElement;
@@ -26,7 +27,7 @@ export class DeleteBalancingOperation {
         }
         const result: DefaultResponseType = await HttpUtils.request('/operations/' + id, 'DELETE')
         if (result.redirect) {
-            return this.openNewRoute(result.redirect)
+            return this.openNewRoute('login')
         }
         if (result.error) {
             // console.log(result.response)

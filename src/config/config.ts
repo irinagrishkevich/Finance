@@ -7,5 +7,5 @@ export default {
         year: 'год',
         all: 'все',
         interval: 'интервал',
-    }
+    } as Record<string, string>
 }
