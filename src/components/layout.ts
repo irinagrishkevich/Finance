@@ -2,6 +2,7 @@ import {HttpUtils} from "../utils/http-utils";
 import {BalanceResponseType} from "../types/balance-response.type";
 import {DefaultResponseType} from "../types/default-response.type";
 import {OpenNewRouteFunction} from "../types/open-new-route.type";
+import {AuthUtils} from "../utils/auth-utils";
 
 
 export class Layout {
@@ -25,6 +26,11 @@ export class Layout {
         this.profileElement = document.getElementById('profile')
         this.balanceInputElement = document.getElementById('balanceInput') as HTMLInputElement
         this.saveBalanceButtonElement = document.getElementById('saveBalanceButton')
+
+        if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+            this.openNewRoute('/login').then()
+            return
+        }
 
         this.initEvent()
     }

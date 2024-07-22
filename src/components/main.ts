@@ -2,7 +2,7 @@ import config from "../config/config";
 import {HttpUtils} from "../utils/http-utils";
 import {ChartData} from "../types/chart-data.type";
 import {ErrorRes} from "../types/error-res.type";
-import { Chart, ArcElement, PieController, Tooltip, Legend } from 'chart.js';
+import {Chart, ArcElement, PieController, Tooltip, Legend, plugins} from 'chart.js';
 
 // Регистрация компонентов
 Chart.register(ArcElement, PieController, Tooltip, Legend);
@@ -24,6 +24,7 @@ export class Main {
     readonly dataIncome: ChartData
     private incomeChart: Chart<"pie"> | null
     private expenseChart: Chart<"pie"> | null
+    private noData: any;
 
     constructor(openNewRoute: OpenNewRouteFunction) {
         this.openNewRoute = openNewRoute
@@ -37,9 +38,8 @@ export class Main {
         this.expenseChart = null
         this.incomeChart = null
 
-        if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
-            this.openNewRoute('/login').then()
-        }
+
+
 
         this.dataExpense = {
             labels: [],
@@ -47,8 +47,10 @@ export class Main {
                 label: 'Расходы',
                 data: [],
                 backgroundColor: [],
-                hoverOffset: 5
+                hoverOffset: 5,
+
             }]
+
         };
 
         this.dataIncome = {
@@ -60,7 +62,10 @@ export class Main {
                 hoverOffset: 5
             }]
         };
-
+        if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+            this.openNewRoute('/login').then()
+            return
+        }
 
         this.myChart();
         this.addFilterEventListener();
@@ -134,7 +139,10 @@ export class Main {
 
     }
 
-    private updateChartData(chartData: ChartData, data: any, type: string): void { //data??
+    private updateChartData(chartData: ChartData, data: any, type: string): void {//data??
+
+
+
         const map: Map<string, number> = new Map();
 
         data.forEach((item: BalancingType): void => {
@@ -145,13 +153,10 @@ export class Main {
                 const currentAmount: number = map.get(category) ?? 0;
                 map.set(category, currentAmount + amount);
 
-                // if (map.has(category) && map.get(category)) {
-                //     map.set(category, map.get(category) + amount);
-                // } else {
-                //     map.set(category, amount);
-                // }
+
             }
         });
+
 
         chartData.labels = [];
         chartData.datasets[0].data = [];
@@ -164,6 +169,7 @@ export class Main {
         });
 
         this.updateCharts();
+
     }
 
     private updateCharts(): void {
@@ -176,6 +182,7 @@ export class Main {
     }
 
     private myChart(): void {
+
         if (this.incomeChartElement) {
             this.incomeChart = new Chart(this.incomeChartElement, {
                 type: 'pie',
@@ -185,11 +192,14 @@ export class Main {
                         title: {
                             display: true,
                             text: 'Доходы'
-                        }
-                    }
+                        },
+                    },
+
                 }
             });
         }
+
+
 
         if (this.expenseChartElement) {
             this.expenseChart = new Chart(this.expenseChartElement, {

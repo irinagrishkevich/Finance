@@ -1,6 +1,7 @@
 import {Color} from "chart.js";
 
 export type ChartData = {
+
     labels: string[],
     datasets: {
         label: string,

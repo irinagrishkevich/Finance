@@ -22,6 +22,7 @@ import {EditExpenseBalancing} from "./components/balancing/edit-expense";
 import {DeleteBalancingOperation} from "./components/balancing/delete";
 import {RouteType} from "./types/route.type";
 import {UserInfo} from "./types/user-info.type";
+import {Error404} from "./components/services/404";
 
 
 export class Router {
@@ -207,12 +208,21 @@ export class Router {
                 load: () => {
                     new DeleteBalancingOperation(this.openNewRoute.bind(this))
                 }
+            },
+            {
+                route: '/404',
+                title: '404',
+                template: '/templates/404.html',
+                load: () => {
+                    new Error404(this.openNewRoute.bind(this))
+                }
             }
         ]
     }
 
     private initEvents(): void {
-
+        window.addEventListener('DOMContentLoaded', this.activateRoute.bind(this))
+        window.addEventListener('popstate', this.activateRoute.bind(this))
         document.addEventListener('click', this.clickHandler.bind(this));
 
     }
@@ -325,12 +335,12 @@ export class Router {
                 newRoute.load()
             }
         } else {
-            console.log('404')
-            alert('404')
+            await this.openNewRoute('/404')
             return
         }
 
     }
+
 
     private activateMenuItem(route: RouteType): void {
         let menuLinks: NodeListOf<Element> = document.querySelectorAll('.nav-link')

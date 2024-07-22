@@ -2,6 +2,7 @@ import {HttpUtils} from "../../utils/http-utils";
 import {CategoriesIncomeType} from "../../types/categories-income.type";
 import {DefaultResponseType} from "../../types/default-response.type";
 import {OpenNewRouteFunction} from "../../types/open-new-route.type";
+import {AuthUtils} from "../../utils/auth-utils";
 
 export class IncomeCreate{
     readonly openNewRoute: OpenNewRouteFunction
@@ -15,8 +16,15 @@ export class IncomeCreate{
         this.cancelIncome = document.getElementById('cancelIncome') as HTMLInputElement
         this.nameIncome = document.getElementById('nameIncome') as HTMLInputElement
 
+        if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+            this.openNewRoute('/login').then()
+            return
+        }
+
         this.createIncome.addEventListener('click', this.createIncomeClick.bind(this))
         this.cancelIncome.addEventListener('click', this.cancelIncomeClick.bind(this))
+
+
 
     }
     private async createIncomeClick(): Promise<void> {

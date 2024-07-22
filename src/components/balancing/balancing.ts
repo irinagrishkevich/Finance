@@ -3,6 +3,7 @@ import config from "../../config/config";
 import {BalancingType} from "../../types/balancing.type";
 import {DefaultResponseType} from "../../types/default-response.type";
 import {OpenNewRouteFunction} from "../../types/open-new-route.type";
+import {AuthUtils} from "../../utils/auth-utils";
 
 export class Balancing {
     readonly openNewRoute: OpenNewRouteFunction
@@ -19,6 +20,11 @@ export class Balancing {
         this.startDateElement = document.getElementById('start-date') as HTMLInputElement;
         this.endDateElement = document.getElementById('end-date') as HTMLInputElement;
         this.intervalButtonElement = document.getElementById('interval-button') as HTMLInputElement;
+
+        if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+            this.openNewRoute('/login').then()
+            return
+        }
 
         this.addFilterEventListener()
         this.loadBalancingTable('today', null, null).then();

@@ -2,6 +2,7 @@ import {HttpUtils} from "../../utils/http-utils";
 import {CategoriesIncomeType} from "../../types/categories-income.type";
 import {DefaultResponseType} from "../../types/default-response.type";
 import {OpenNewRouteFunction} from "../../types/open-new-route.type";
+import {AuthUtils} from "../../utils/auth-utils";
 
 export class IncomeEdit {
     readonly openNewRoute: OpenNewRouteFunction
@@ -29,7 +30,12 @@ export class IncomeEdit {
         if (id) {
             this.getIncome(id).then()
         } else {
+            if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+                this.openNewRoute('/login').then()
+                return
+            }
             this.openNewRoute('/').then()
+            return
         }
 
 
